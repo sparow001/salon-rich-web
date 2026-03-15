@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salon Rich | Premium Beauty Services</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+    
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/home.css">
+
+    <style>
+        /* --- Immediate Hero UI Fixes --- */
+        .hero { 
+            position: relative; 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            text-align: center;
+        }
+        .hero-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .slide { 
+            position: absolute; 
+            top: 0; left: 0; width: 100%; height: 100%; 
+            background-size: cover; 
+            background-position: center; 
+            opacity: 0; 
+            transition: opacity 1.5s ease-in-out; 
+        }
+        .slide::after { 
+            content: ''; 
+            position: absolute; 
+            top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.6); 
+        }
+        .slide.active { opacity: 1; }
+        .hero-content { z-index: 10; padding: 0 20px; max-width: 900px; }
+
+        /* 🚨 Navbar Layout Fixes (Professional Minimalist Look) 🚨 */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            flex: 1;
+        }
+        .logo img {
+            max-height: 50px;
+            width: auto;
+            border-radius: 0;
+            border: none;
+            object-fit: contain;
+        }
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            justify-content: center; 
+            flex: 2;
+        }
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; 
+            gap: 20px;
+            flex: 1;
+        }
+        /* 🚨 Simple Text Buttons for Login/Logout 🚨 */
+        #navLogin, #navLogout, #navProfile {
+            background: transparent !important;
+            border: none !important;
+            color: white !important;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0;
+            text-decoration: none;
+        }
+        #navLogin:hover, #navLogout:hover {
+            color: var(--accent-gold) !important;
+        }
+        #navProfile {
+            color: var(--accent-gold) !important;
+        }
+
+        /* 🚨 Mobile Menu Fixes 🚨 */
+        .menu-toggle { position: relative; z-index: 2001; display: none; }
+
+        @media (max-width: 992px) {
+            .nav-actions { display: none; } 
+            .menu-toggle { display: block; background: none; border: none; color: var(--accent-gold); font-size: 24px;}
+            .nav-menu {
+                display: none; 
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--secondary-dark);
+                padding: 30px 0;
+                text-align: center;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+                z-index: 1000;
+            }
+            .nav-menu.active {
+                display: flex !important; 
+                animation: slideDown 0.3s ease;
+            }
+            .nav-actions {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                padding: 0 20px;
+                margin-top: 20px;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                padding-top: 20px;
+            }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 🌟 Premium Modal Glassmorphism 🌟 */
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: linear-gradient(145deg, #1e1e1e, #121212); padding: 35px; border-radius: 24px; 
+            border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.8); color: white; 
+            width: 90%; max-width: 550px; animation: modalPopUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes modalPopUp { from { opacity: 0; transform: translateY(40px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .close-btn { color: #888; float: right; font-size: 28px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: -10px; }
+        .close-btn:hover { color: #FFD700; transform: scale(1.2); }
+        .form-group label { color: #ccc; font-size: 14px; margin-bottom: 10px; display: block; }
+        .date-selection-wrapper { position: relative; display: flex; align-items: center; gap: 10px; }
+        .calendar-btn { background: rgba(255, 215, 0, 0.1); border: 1px solid #FFD700; border-radius: 12px; font-size: 20px; cursor: pointer; padding: 10px 15px; transition: 0.3s; }
+        .calendar-btn:hover { background: #FFD700; color: #000; transform: translateY(-3px); }
+
+        .nav-links a.active {
+            color: var(--accent-gold) !important; font-weight: bold; border-bottom: 2px solid var(--accent-gold);
+            padding-bottom: 5px; transition: all 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo" id="siteLogo">
+                <img src="https://cdn-icons-png.flaticon.com/512/1986/1986347.png" alt="Logo">
+                <span class="logo-text">SALON RICH</span>
+            </a>
+            
+            <div class="nav-menu" id="navMenu">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="active" data-i18n="home">Home</a></li>
+                    <li><a href="pages/services.html" data-i18n="services">Services</a></li>
+                    <li><a href="pages/gallery.html" data-i18n="gallery_nav">Gallery</a></li>
+                    <li><a href="pages/about.html" data-i18n="about">About Us</a></li>
+                    <li><a href="pages/contact.html" data-i18n="contact">Contact</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="lang-dropdown-container" style="position: relative; border-right: 1px solid rgba(255,255,255,0.2); padding-right: 15px; display: flex; align-items: center;">
+                        <button id="langToggleBtn" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px;">
+                            <i class="fas fa-globe"></i> <span id="currentLangText">EN</span> <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+                        </button>
+                        <div id="langDropdown" style="display: none; position: absolute; top: 100%; right: 15px; background: var(--secondary-dark); border: 1px solid var(--accent-gold); border-radius: 8px; padding: 10px 0; min-width: 120px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 3000;">
+                            <button class="lang-option" data-lang="en" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">English</button>
+                            <button class="lang-option" data-lang="si" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">සිංහල</button>
+                            <button class="lang-option" data-lang="ta" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">தமிழ்</button>
+                        </div>
+                    </div>
+                    
+                    <a href="pages/login.html" id="navLogin"><i class="fas fa-user-circle" style="font-size: 18px;"></i> <span data-i18n="login">Login</span></a>
+                    
+                    <a href="pages/my_bookings.html" id="navProfile" style="display: none;"><i class="fas fa-user-check" style="font-size: 18px;"></i> <span id="profileNameText">Profile</span></a>
+                </div>
+            </div>
+
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-slider" id="heroSliderContainer">
+            <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1600&q=80');"></div>
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1600&q=80');"></div>
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=1600&q=80');"></div>
+        </div>
+
+        <div class="hero-content">
+            <h1 style="font-size: clamp(2.5rem, 8vw, 4rem); margin-bottom: 20px;">Experience Premium Beauty</h1>
+            <p style="font-size: clamp(1rem, 4vw, 1.2rem); color: var(--text-gray); margin-bottom: 35px;">
+                Make your beauty dreams come true. Book your appointment now.
+            </p>
+            <button id="btnHeroBook" class="btn-primary" style="padding: 18px 45px; font-size: 16px;" data-i18n="bookNowHero">Book an Appointment</button>
+        </div>
+    </header>
+
+    <section class="section container">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; text-align: center;">
+            <div>
+                <div style="font-size: 40px; color: var(--accent-gold); margin-bottom: 15px;"><i class="fas fa-crown"></i></div>
+                <h3>Premium Quality</h3>
+                <p style="color: var(--text-gray);">We use only the world's finest and safest beauty products for our clients.</p>
+            </div>
+            <div>
+                <div style="font-size: 40px; color: var(--accent-gold); margin-bottom: 15px;"><i class="fas fa-user-check"></i></div>
+                <h3>Expert Stylists</h3>
+                <p style="color: var(--text-gray);">Our team of certified professionals ensures you get the perfect look every time.</p>
+            </div>
+            <div>
+                <div style="font-size: 40px; color: var(--accent-gold); margin-bottom: 15px;"><i class="fas fa-magic"></i></div>
+                <h3>Modern Vibe</h3>
+                <p style="color: var(--text-gray);">Relax in our luxurious environment designed for your ultimate comfort.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="section" style="background-color: var(--secondary-dark);">
+        <div class="container text-center">
+            <h2 style="font-size: 36px; margin-bottom: 50px;" data-i18n="servicesTitle">Our Premium Services</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px;">
+                <div class="service-card" style="background: var(--primary-dark); padding: 40px 20px; border-radius: 20px; border: 1px solid rgba(255, 215, 0, 0.05);">
+                    <h3 data-i18n="service1Name">Hair Styling</h3>
+                    <p style="color: var(--text-gray); font-size: 14px; margin: 15px 0;" data-i18n="service1Desc">Professional cuts, colors, and styling.</p>
+                    <p style="color: var(--accent-gold); font-size: 22px; font-weight: bold; margin-bottom: 20px;">Rs. 2500</p>
+                    <button class="btn-primary btn-book-global" style="width: 100%;" data-i18n="bookNowBtn">Book Now</button>
+                </div>
+                
+                <div class="service-card" style="background: var(--primary-dark); padding: 40px 20px; border-radius: 20px; border: 1px solid rgba(255, 215, 0, 0.05);">
+                    <h3 data-i18n="service2Name">Beard Trimming</h3>
+                    <p style="color: var(--text-gray); font-size: 14px; margin: 15px 0;" data-i18n="service2Desc">Classic beard grooming and styling.</p>
+                    <p style="color: var(--accent-gold); font-size: 22px; font-weight: bold; margin-bottom: 20px;">Rs. 1500</p>
+                    <button class="btn-primary btn-book-global" style="width: 100%;" data-i18n="bookNowBtn">Book Now</button>
+                </div>
+
+                <div class="service-card" style="background: var(--primary-dark); padding: 40px 20px; border-radius: 20px; border: 1px solid rgba(255, 215, 0, 0.05);">
+                    <h3 data-i18n="service3Name">Hair Coloring</h3>
+                    <p style="color: var(--text-gray); font-size: 14px; margin: 15px 0;" data-i18n="service3Desc">Premium hair coloring and highlights.</p>
+                    <p style="color: var(--accent-gold); font-size: 22px; font-weight: bold; margin-bottom: 20px;">Rs. 4500</p>
+                    <button class="btn-primary btn-book-global" style="width: 100%;" data-i18n="bookNowBtn">Book Now</button>
+                </div>
+
+                <div class="service-card" style="background: var(--primary-dark); padding: 40px 20px; border-radius: 20px; border: 1px solid rgba(255, 215, 0, 0.05);">
+                    <h3 data-i18n="service4Name">Facial Treatment</h3>
+                    <p style="color: var(--text-gray); font-size: 14px; margin: 15px 0;" data-i18n="service4Desc">Deep cleansing and glowing skin.</p>
+                    <p style="color: var(--accent-gold); font-size: 22px; font-weight: bold; margin-bottom: 20px;">Rs. 3000</p>
+                    <button class="btn-primary btn-book-global" style="width: 100%;" data-i18n="bookNowBtn">Book Now</button>
+                </div>
+            </div>
+            
+            <div style="margin-top: 50px;">
+                <a href="pages/services.html" class="btn-primary" style="padding: 15px 40px; font-size: 16px; font-weight: bold; width: auto; display: inline-block;">VIEW ALL SERVICES</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="section text-center">
+        <div class="container">
+            <h2 style="margin-bottom: 40px;" data-i18n="galleryTitle">Our Masterpieces</h2>
+            
+            <div id="homeGalleryContainer" style="margin-bottom: 40px;">
+                <p style="color: var(--text-gray);" data-i18n="loading">Loading our work...</p>
+            </div>
+            
+            <div>
+                <a href="pages/gallery.html" class="btn-primary" style="padding: 15px 40px; font-size: 16px; font-weight: bold; width: auto; display: inline-block;">VIEW ALL GALLERY</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-about">
+                <h2 class="logo-text" id="footerLogo" style="font-size: 28px; margin-bottom: 10px; color: var(--accent-gold);">SALON RICH</h2>
+                <p style="color: var(--text-gray); margin-top: 15px;">Your ultimate destination for premium beauty and grooming experiences in Sri Lanka.</p>
+                <div style="margin-top: 20px; font-size: 20px;">
+                    <a href="#" style="margin-right: 15px;"><i class="fab fa-facebook"></i></a>
+                    <a href="#" style="margin-right: 15px;"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h3 data-i18n="services">Services</h3>
+                <ul>
+                    <li><a href="pages/services.html">Hair Styling</a></li>
+                    <li><a href="pages/services.html">Beard Trimming</a></li>
+                    <li><a href="pages/services.html">Facial Care</a></li>
+                </ul>
+            </div>
+            <div class="footer-hours">
+                <h3>Opening Hours</h3>
+                <p>Mon - Fri: 9:00 AM - 8:00 PM</p>
+                <p>Sat - Sun: 10:00 AM - 9:00 PM</p>
+            </div>
+        </div>
+        <div class="container text-center footer-bottom">
+            &copy; 2026 Salon Rich. All rights reserved. | Developed by Tharindu Hashan
+        </div>
+    </footer>
+
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h2 id="modalTitle" style="margin-top: 0; color: var(--accent-gold); margin-bottom: 25px; font-family: 'Playfair Display', serif;" data-i18n="modalTitle">
+                Book Appointment
+            </h2>
+            
+            <form id="bookingForm">
+                <input type="hidden" id="selectedService">
+                
+                <div class="form-group">
+                    <label data-i18n="selectDate">Select Date (DD/MM/YYYY):</label>
+                    <div class="quick-pills" style="margin-bottom: 15px;">
+                        <div class="pill active" id="pillToday">Today</div>
+                        <div class="pill" id="pillTomorrow">Tomorrow</div>
+                        <div class="pill" id="pillWeekend">This Weekend</div>
+                    </div>
+                    <div class="date-selection-wrapper">
+                        <div class="date-slider" id="dateSlider" style="flex-grow: 1;"></div>
+                        <button type="button" class="calendar-btn" id="btnOpenCalendar" title="Pick another date">📅</button>
+                        
+                        <input type="text" id="hiddenFlatpickr" style="display: none;"> 
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 25px;">
+                    <label data-i18n="selectTime">Select Time Slot:</label>
+                    <div id="timeSlotsContainer" class="slots-grid">
+                        <p style="color: var(--text-gray); font-size: 13px; grid-column: 1 / -1; text-align: center;">Loading premium slots...</p>
+                    </div>
+                </div>
+
+                <button type="submit" id="btnConfirmBooking" class="btn-primary" style="width: 100%; margin-top: 30px; padding: 16px; font-size: 16px; border-radius: 12px;" disabled data-i18n="confirmBookingBtn">
+                    Select a Time Slot
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script type="module" src="js/home.js"></script>
+    <script type="module" src="js/booking.js?v=3.2"></script>
+
+    <script type="module">
+        import { auth, db } from './js/firebase-config.js';
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { collection, query, orderBy, limit, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const navLogin = document.getElementById('navLogin');
+        const navLogout = document.getElementById('navLogout');
+        const navProfile = document.getElementById('navProfile');
+        const profileNameText = document.getElementById('profileNameText');
+
+        // Authentication State
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if(navLogin) navLogin.style.display = 'none';
+                if(navLogout) navLogout.style.display = 'inline-flex';
+                if(navProfile) navProfile.style.display = 'inline-flex';
+                if(profileNameText) profileNameText.innerText = `Hi, ${user.displayName ? user.displayName.split(' ')[0] : 'Customer'}`; 
+            } else {
+                if(navLogin) navLogin.style.display = 'inline-flex';
+                if(navLogout) navLogout.style.display = 'none';
+                if(navProfile) navProfile.style.display = 'none';
+            }
+        });
+
+        navLogout?.addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.reload();
+        });
+
+        // 🚨 Fetch Dynamic Home Media (Logo & Slides)
+        async function loadDynamicHomeMedia() {
+            try {
+                const docRef = doc(db, "site_settings", "home_page");
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    if (data.logoUrl) {
+                        const logoHTML = `
+                            <img src="${data.logoUrl}" alt="Salon Rich Logo">
+                            <span class="logo-text">SALON RICH</span>
+                        `;
+                        const siteLogo = document.getElementById('siteLogo');
+                        if (siteLogo) siteLogo.innerHTML = logoHTML;
+                    }
+                    
+                    if (data.heroSlides && data.heroSlides.length > 0) {
+                        const sliderContainer = document.getElementById('heroSliderContainer');
+                        let slidesHTML = '';
+                        for (let i = 0; i < 5; i++) {
+                            const imgUrl = data.heroSlides[i];
+                            if (imgUrl) {
+                                slidesHTML += `<div class="slide ${i === 0 ? 'active' : ''}" style="background-image: url('${imgUrl}');"></div>`;
+                            }
+                        }
+                        if (slidesHTML !== '') {
+                            sliderContainer.innerHTML = slidesHTML;
+                            window.initSlideshow(); 
+                        }
+                    }
+                }
+            } catch (error) { console.error("Error loading dynamic media:", error); }
+        }
+        loadDynamicHomeMedia();
+
+        // 🚨 Latest 3 Gallery Images Fetch Logic
+        async function loadLatestGallery() {
+            const container = document.getElementById('homeGalleryContainer');
+            try {
+                const q = query(collection(db, "gallery"), orderBy("createdAt", "desc"), limit(3));
+                const snap = await getDocs(q);
+                if(snap.empty) { 
+                    container.innerHTML = '<p style="color: var(--text-gray);">No masterpieces uploaded yet.</p>'; 
+                    return; 
+                }
+                
+                let html = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">';
+                snap.forEach(docSnap => {
+                    const imgUrl = docSnap.data().imageUrl || docSnap.data().url;
+                    if(imgUrl) {
+                        html += `<img src="${imgUrl}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 15px; border: 2px solid var(--accent-gold); box-shadow: 0 5px 15px rgba(0,0,0,0.5);">`;
+                    }
+                });
+                html += '</div>';
+                container.innerHTML = html;
+            } catch (e) { console.error("Gallery Load Error:", e); }
+        }
+        loadLatestGallery();
+
+        // 🚨 Hero Book Button Redirect Logic
+        document.getElementById('btnHeroBook')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const user = auth.currentUser;
+            if(user) { window.location.href = 'pages/services.html'; } 
+            else { window.location.href = 'pages/login.html?redirect=services'; }
+        });
+    </script>
+
+    <script>
+        // Hamburger Menu & Auto-Close Logic
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+        const navLinks = document.querySelectorAll('.nav-links a, .nav-actions a, .nav-actions button'); 
+
+        menuToggle.addEventListener('click', () => { navMenu.classList.toggle('active'); });
+        navLinks.forEach(link => { link.addEventListener('click', () => { navMenu.classList.remove('active'); }); });
+
+        // Dynamic Hero Slideshow Logic
+        let currentSlide = 0;
+        let slideInterval;
+        
+        window.initSlideshow = function() {
+            clearInterval(slideInterval);
+            const slides = document.querySelectorAll('.slide');
+            if(slides.length <= 1) return; 
+            
+            slideInterval = setInterval(() => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }, 5000);
+        };
+        window.initSlideshow();
+
+        // Global Book Now Button Logic
+        document.querySelectorAll('.btn-book-global').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const dummyEvent = { preventDefault: () => {}, target: document.querySelector('.service-card .btn-primary') };
+                document.dispatchEvent(new CustomEvent('click', { detail: dummyEvent }));
+            });
+        });
+    </script>
+</body>
+</html>

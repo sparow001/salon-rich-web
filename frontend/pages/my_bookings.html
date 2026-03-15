@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account | Salon Rich</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+
+    <style>
+        /* 🌟 Premium Page Header */
+        .page-header {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1600&q=80') center/cover;
+            padding: 120px 20px 60px;
+            text-align: center;
+            border-bottom: 1px solid var(--accent-gold);
+        }
+
+        /* 🌟 Professional Dashboard Layout */
+        .dashboard-container { 
+            display: grid; 
+            grid-template-columns: 300px 1fr; 
+            gap: 40px; 
+            margin: 40px auto; 
+            max-width: 1200px;
+            align-items: start; 
+        }
+        
+        /* --- Sidebar Styles --- */
+        .profile-sidebar {
+            background: var(--primary-dark); padding: 30px 20px; border-radius: 20px; text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: sticky; top: 100px;
+        }
+        .profile-avatar-wrapper { position: relative; width: 120px; height: 120px; margin: 0 auto 20px; }
+        .profile-avatar {
+            width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+            border: 3px solid var(--accent-gold); background: rgba(255, 215, 0, 0.1);
+        }
+        /* Camera icon to upload image */
+        .upload-icon {
+            position: absolute; bottom: 0; right: 5px; background: var(--accent-gold); color: #000;
+            width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: 0.3s;
+        }
+        .upload-icon:hover { transform: scale(1.1); background: #fff; }
+
+        .profile-name { font-size: 24px; color: white; margin-bottom: 5px; font-family: 'Playfair Display', serif; }
+        .profile-email { color: var(--text-gray); font-size: 14px; margin-bottom: 30px; }
+        
+        /* Sidebar Navigation Tabs */
+        .sidebar-menu { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
+        .tab-btn {
+            background: transparent; border: 1px solid rgba(255,255,255,0.1); color: white;
+            padding: 15px 20px; border-radius: 12px; font-size: 15px; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; gap: 15px; text-align: left;
+        }
+        .tab-btn i { font-size: 18px; color: var(--accent-gold); width: 20px; text-align: center; }
+        .tab-btn:hover { background: rgba(255, 215, 0, 0.05); border-color: var(--accent-gold); }
+        .tab-btn.active { background: var(--accent-gold); color: #000; font-weight: bold; border-color: var(--accent-gold); }
+        .tab-btn.active i { color: #000; }
+
+        .btn-logout-pro {
+            background: transparent; border: 1px solid #f44336; color: #f44336;
+            padding: 12px 20px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold;
+            cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-logout-pro:hover { background: #f44336; color: white; box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3); }
+
+        /* --- Main Content Area --- */
+        .dashboard-main {
+            background: var(--secondary-dark); padding: 40px; border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.1); min-height: 500px;
+        }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .section-title { color: var(--accent-gold); margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 15px; font-family: 'Playfair Display', serif; }
+
+        /* Form Inputs for Edit Profile */
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; color: #ccc; margin-bottom: 8px; font-size: 14px; }
+        .form-input {
+            width: 100%; padding: 15px; background: #111; border: 1px solid #333;
+            border-radius: 8px; color: white; font-size: 15px; transition: 0.3s;
+        }
+        .form-input:focus { border-color: var(--accent-gold); outline: none; box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+
+        /* --- Kept: Old Booking List & Countdown Styles --- */
+        .countdown-card { background: linear-gradient(135deg, #111, #1a1a1a); padding: 30px; border-radius: 15px; border: 1px solid var(--accent-gold); text-align: center; margin-bottom: 30px; display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .countdown-timer { font-size: 38px; color: var(--accent-gold); font-weight: bold; margin: 15px 0; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,215,0,0.3); }
+        
+        .booking-card { background: var(--primary-dark); padding: 20px; margin-bottom: 15px; border-radius: 10px; border-left: 4px solid var(--accent-gold); display: flex; justify-content: space-between; align-items: center; transition: 0.3s; border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid var(--accent-gold);}
+        .booking-card:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        
+        .status-badge { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; text-align: center; }
+        .status-pending { background: #ffaa00; color: #000; }
+        .status-accepted { background: #4CAF50; color: #fff; }
+        .status-completed { background: #2196F3; color: #fff; }
+        .status-cancelled { background: #f44336; color: #fff; }
+        
+        .action-buttons { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .btn-cancel { background: transparent; border: 1px solid #f44336; color: #f44336; padding: 6px 12px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-size: 12px; width: 100%; text-align: center;}
+        .btn-cancel:hover { background: #f44336; color: #fff; }
+        .btn-calendar { background: transparent; border: 1px solid #4CAF50; color: #4CAF50; padding: 6px 12px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-size: 12px; width: 100%; text-decoration: none; display: inline-block; text-align: center;}
+        .btn-calendar:hover { background: #4CAF50; color: #fff; }
+
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #4CAF50; color: white; padding: 15px 25px; border-radius: 8px; transform: translateY(100px); opacity: 0; transition: 0.4s; z-index: 1000; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        /* Responsive Mobile Layout */
+        @media (max-width: 992px) { 
+            .dashboard-container { grid-template-columns: 1fr; }
+            .profile-sidebar { position: relative; top: 0; }
+            .sidebar-menu { flex-direction: row; overflow-x: auto; padding-bottom: 10px; }
+            .tab-btn { flex: 1; justify-content: center; min-width: 150px; }
+            .tab-btn span { display: none; } /* Hide text on mobile, show icons */
+            .tab-btn i { font-size: 20px; }
+        }
+        @media (max-width: 600px) {
+            .booking-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .action-buttons { width: 100%; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
+            .action-buttons .status-badge { width: 100%; margin-bottom: 5px; }
+            .btn-cancel, .btn-calendar { flex: 1; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a href="../index.html" class="logo" id="siteLogo">
+                <img src="https://cdn-icons-png.flaticon.com/512/1986/1986347.png" alt="Logo" style="max-height: 50px; width: auto; object-fit: contain;">
+                <span class="logo-text" style="font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: white; letter-spacing: 2px; text-transform: uppercase;">SALON RICH</span>
+            </a>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="../index.html" style="color: var(--accent-gold); text-decoration: none; font-weight: bold;"><i class="fas fa-home"></i> Back to Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1 style="font-size: clamp(2.5rem, 6vw, 3.5rem); margin-bottom: 10px; color: var(--accent-gold); font-family: 'Playfair Display', serif;">My Dashboard</h1>
+            <p style="font-size: 1.1rem; color: #ddd;">Manage your profile, bookings, and settings.</p>
+        </div>
+    </header>
+
+    <section class="section container">
+        <div class="dashboard-container">
+            
+            <div class="profile-sidebar">
+                <div class="profile-avatar-wrapper">
+                    <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" id="displayUserAvatar" class="profile-avatar" alt="User Avatar">
+                    <input type="file" id="uploadAvatarInput" style="display: none;" accept="image/png, image/jpeg, image/jpg">
+                    <div class="upload-icon" onclick="document.getElementById('uploadAvatarInput').click();" title="Change Profile Picture">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+                
+                <h2 class="profile-name" id="displayUserName">Loading...</h2>
+                <p class="profile-email" id="displayUserEmail">Please wait...</p>
+                
+                <div class="sidebar-menu">
+                    <button class="tab-btn active" onclick="switchTab('appointments')">
+                        <i class="fas fa-calendar-check"></i> <span>My Appointments</span>
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('editProfile')">
+                        <i class="fas fa-user-edit"></i> <span>Edit Profile</span>
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('settings')">
+                        <i class="fas fa-cog"></i> <span>Account Settings</span>
+                    </button>
+                </div>
+
+                <button id="profileLogoutBtn" class="btn-logout-pro">
+                    <i class="fas fa-sign-out-alt"></i> Log Out
+                </button>
+            </div>
+
+            <div class="dashboard-main">
+                
+                <div id="tab-appointments" class="tab-content active">
+                    <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Upcoming Appointments</h2>
+                    
+                    <div id="countdownCard" class="countdown-card">
+                        <h3 style="margin: 0; color: #fff; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Your Next Appointment In:</h3>
+                        <div id="countdownTimer" class="countdown-timer">00d 00h 00m</div>
+                        <p id="countdownService" style="margin: 0; color: var(--text-gray); font-size: 15px;"></p>
+                    </div>
+
+                    <div id="bookingsList">
+                        <p style="text-align: center; color: var(--text-gray);">Loading your appointments...</p>
+                    </div>
+                    
+                    <div style="margin-top: 30px; text-align: center;">
+                        <a href="services.html" class="btn-primary" style="padding: 12px 30px; font-size: 14px; border-radius: 8px;">Book New Appointment</a>
+                    </div>
+                </div>
+
+                <div id="tab-editProfile" class="tab-content">
+                    <h2 class="section-title"><i class="fas fa-user-edit"></i> Personal Information</h2>
+                    <form id="editProfileForm">
+                        <div class="form-group">
+                            <label>Display Name</label>
+                            <input type="text" id="editName" class="form-input" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="editPhone" class="form-input" placeholder="e.g. +94 77 123 4567">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address (Cannot be changed)</label>
+                            <input type="email" id="editEmail" class="form-input" disabled style="opacity: 0.6; cursor: not-allowed;">
+                        </div>
+                        <button type="submit" id="btnSaveProfile" class="btn-primary" style="width: 100%; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                            Save Changes
+                        </button>
+                    </form>
+                </div>
+
+                <div id="tab-settings" class="tab-content">
+                    <h2 class="section-title"><i class="fas fa-lock"></i> Security Settings</h2>
+                    <form id="changePasswordForm">
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" id="newPassword" class="form-input" placeholder="Minimum 6 characters" required minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm New Password</label>
+                            <input type="password" id="confirmPassword" class="form-input" placeholder="Re-enter new password" required>
+                        </div>
+                        <button type="submit" id="btnChangePassword" class="btn-primary" style="width: 100%; padding: 15px; border-radius: 8px; margin-top: 10px; background: transparent; border: 1px solid var(--accent-gold);">
+                            Update Password
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <div id="toastMessage" class="toast">Action successful!</div>
+
+    <script type="module" src="../js/home.js"></script>
+    <script type="module">
+        import { auth, db } from '../js/firebase-config.js';
+        import { onAuthStateChanged, signOut, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { collection, query, where, onSnapshot, doc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // 🚨 Note: To upload images, Firebase Storage needs to be configured in your firebase-config.js.
+        // For now, we will save the image as a Base64 string in Firestore (good for small avatars) or you can implement proper Storage later.
+
+        const bookingsListEl = document.getElementById('bookingsList');
+        const countdownCard = document.getElementById('countdownCard');
+        const countdownTimer = document.getElementById('countdownTimer');
+        const countdownService = document.getElementById('countdownService');
+        
+        let countdownInterval;
+        let currentUser = null;
+
+        // UI Logic: Tab Switching
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Show Toast Function
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toastMessage');
+            toast.innerText = message;
+            toast.style.background = isError ? '#f44336' : '#4CAF50';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                
+                // Set default info in UI
+                document.getElementById('displayUserName').innerText = user.displayName || 'Valued Client';
+                document.getElementById('displayUserEmail').innerText = user.email;
+                
+                document.getElementById('editName').value = user.displayName || '';
+                document.getElementById('editEmail').value = user.email;
+
+                // Fetch extra profile data (Phone, Avatar) from Firestore users collection
+                try {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const userDoc = await getDoc(userDocRef);
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        if (userData.phone) document.getElementById('editPhone').value = userData.phone;
+                        if (userData.avatarUrl) document.getElementById('displayUserAvatar').src = userData.avatarUrl;
+                    }
+                } catch (e) { console.error("Error fetching user details", e); }
+
+                // Fetch Bookings
+                fetchUserBookings(user.email);
+            } else {
+                window.location.replace('login.html');
+            }
+        });
+
+        // ==========================================
+        // Profile Edit Logic (Name, Phone, Avatar)
+        // ==========================================
+        
+        // 1. Avatar Upload Logic (Using Base64 for simplicity without Firebase Storage setup)
+        document.getElementById('uploadAvatarInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Check file size (limit to 1MB because we save as Base64 in Firestore)
+            if (file.size > 1024 * 1024) {
+                showToast("Image is too large. Max 1MB allowed.", true);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async function(event) {
+                const base64String = event.target.result;
+                document.getElementById('displayUserAvatar').src = base64String; // Show preview immediately
+
+                // Save to Firestore
+                if (currentUser) {
+                    try {
+                        const userDocRef = doc(db, "users", currentUser.uid);
+                        await setDoc(userDocRef, { avatarUrl: base64String }, { merge: true });
+                        showToast("Profile picture updated!");
+                    } catch (error) {
+                        showToast("Failed to save picture.", true);
+                    }
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // 2. Save Profile Form
+        document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSaveProfile');
+            const newName = document.getElementById('editName').value;
+            const newPhone = document.getElementById('editPhone').value;
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.disabled = true;
+
+            try {
+                // Update Firebase Auth Display Name
+                await updateProfile(currentUser, { displayName: newName });
+                
+                // Update Firestore Extra Data
+                const userDocRef = doc(db, "users", currentUser.uid);
+                await setDoc(userDocRef, { name: newName, phone: newPhone, email: currentUser.email }, { merge: true });
+
+                // Update UI
+                document.getElementById('displayUserName').innerText = newName;
+                showToast("Profile updated successfully!");
+            } catch (error) {
+                showToast(error.message, true);
+            } finally {
+                btn.innerHTML = 'Save Changes';
+                btn.disabled = false;
+            }
+        });
+
+        // 3. Change Password Form
+        document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+
+            if (newPass !== confirmPass) {
+                showToast("Passwords do not match!", true);
+                return;
+            }
+
+            const btn = document.getElementById('btnChangePassword');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+            btn.disabled = true;
+
+            try {
+                await updatePassword(currentUser, newPass);
+                showToast("Password updated successfully!");
+                document.getElementById('changePasswordForm').reset();
+            } catch (error) {
+                // If user hasn't logged in recently, Firebase requires re-authentication
+                if (error.code === 'auth/requires-recent-login') {
+                    showToast("Please log out and log back in to change password.", true);
+                } else {
+                    showToast(error.message, true);
+                }
+            } finally {
+                btn.innerHTML = 'Update Password';
+                btn.disabled = false;
+            }
+        });
+
+        // ==========================================
+        // Kept: Booking Fetching & Countdown Logic
+        // ==========================================
+        function fetchUserBookings(email) {
+            const q = query(collection(db, "bookings"), where("userEmail", "==", email));
+            onSnapshot(q, (snapshot) => {
+                let bookings = [];
+                let closestBookingDate = null;
+                let closestBookingInfo = null;
+
+                if (snapshot.empty) {
+                    bookingsListEl.innerHTML = '<p style="text-align: center; color: var(--text-gray);">You have no upcoming appointments yet.</p>';
+                    countdownCard.style.display = 'none';
+                    return;
+                }
+
+                snapshot.forEach((docSnap) => { bookings.push({ id: docSnap.id, ...docSnap.data() }); });
+                bookings.sort((a, b) => new Date(`${b.date}T${b.time}`) - new Date(`${a.date}T${a.time}`));
+
+                let generatedHTML = "";
+                bookings.forEach((booking) => {
+                    const status = booking.status || 'Pending';
+                    let statusClass = 'status-pending';
+                    if (status === 'Accepted') statusClass = 'status-accepted';
+                    if (status === 'Completed') statusClass = 'status-completed';
+                    if (status === 'Cancelled') statusClass = 'status-cancelled';
+
+                    const cancelButtonHTML = status === 'Pending' || status === 'Accepted'
+                        ? `<button class="btn-cancel" onclick="window.cancelBooking('${booking.id}', '${booking.date}', '${booking.time}')">Cancel</button>` : '';
+
+                    let calendarHTML = '';
+                    if (status === 'Accepted') {
+                        const [year, month, day] = booking.date.split('-');
+                        const [hour, min] = booking.time.split(':');
+                        const startDate = new Date(year, month - 1, day, hour, min);
+                        
+                        const formatDT = (d) => d.toISOString().replace(/-|:|\.\d\d\d/g,"");
+                        const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); 
+                        
+                        const gCalLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Salon+Rich+-+${encodeURIComponent(booking.service)}&dates=${formatDT(startDate)}/${formatDT(endDate)}&details=Your+premium+appointment+at+Salon+Rich`;
+                        calendarHTML = `<a href="${gCalLink}" target="_blank" class="btn-calendar">📅 Add to Calendar</a>`;
+
+                        if (startDate > new Date()) {
+                            if (!closestBookingDate || startDate < closestBookingDate) {
+                                closestBookingDate = startDate;
+                                closestBookingInfo = booking;
+                            }
+                        }
+                    }
+
+                    generatedHTML += `
+                        <div class="booking-card">
+                            <div>
+                                <h4 style="margin: 0 0 5px 0; color: var(--accent-gold);">${booking.service || 'Salon Service'}</h4>
+                                <p style="margin: 0; color: var(--text-gray); font-size: 14px;">
+                                    📅 ${booking.displayDate || booking.date} | ⏰ ${booking.time}
+                                </p>
+                            </div>
+                            <div class="action-buttons">
+                                <span class="status-badge ${statusClass}">${status}</span>
+                                ${cancelButtonHTML}
+                                ${calendarHTML}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                bookingsListEl.innerHTML = generatedHTML;
+
+                if (closestBookingDate) { startCountdown(closestBookingDate, closestBookingInfo); } 
+                else { countdownCard.style.display = 'none'; clearInterval(countdownInterval); }
+            });
+        }
+
+        function startCountdown(targetDate, bookingInfo) {
+            countdownCard.style.display = 'block';
+            countdownService.innerText = `${bookingInfo.service} on ${bookingInfo.displayDate || bookingInfo.date} at ${bookingInfo.time}`;
+            
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = targetDate.getTime() - now;
+
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    countdownTimer.innerHTML = "IT'S TIME! 🎉";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                countdownTimer.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }, 1000);
+        }
+
+        window.cancelBooking = async function(bookingId, bDate, bTime) {
+            const bookingDateTime = new Date(`${bDate}T${bTime}`);
+            const now = new Date();
+            const diffInMs = bookingDateTime.getTime() - now.getTime();
+            const diffInHours = diffInMs / (1000 * 60 * 60);
+
+            if (diffInHours < 2 && diffInHours > 0) {
+                showToast("Sorry, cancellations are not allowed less than 2 hours before the appointment.", true);
+                return;
+            }
+
+            if (!confirm("Are you sure you want to cancel this appointment?")) return;
+            
+            try {
+                await updateDoc(doc(db, "bookings", bookingId), { status: "Cancelled" });
+                showToast("Booking cancelled successfully.");
+            } catch (error) { showToast("Could not cancel: " + error.message, true); }
+        };
+
+        // 🚨 Logout Functionality
+        document.getElementById('profileLogoutBtn').addEventListener('click', async () => {
+            if (confirm("Are you sure you want to log out?")) {
+                try {
+                    await signOut(auth);
+                    window.location.replace('../index.html');
+                } catch (error) {
+                    console.error("Logout error", error);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+/* ==========================================
+   SALON RICH - GLOBAL STYLES (Phase 3)
+   Focus: Premium UI, Typography, & Master Layout
+   ========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* Color Palette */
+    --primary-dark: #0F0F0F;    
+    --secondary-dark: #1A1A1A;  
+    --accent-gold: #FFD700;     
+    --dark-gold: #B8860B;       
+    --text-white: #FFFFFF;
+    --text-gray: #A0A0A0;
+    --success-green: #4CAF50;   
+    --error-red: #F44336;       
+
+    /* Layout & Spacing */
+    --container-width: 1200px;
+    --section-padding: 80px 20px;
+    --header-height: 90px; /* Slightly taller for premium look */
+
+    /* Effects */
+    --transition: all 0.3s ease-in-out;
+    --glass-bg: rgba(15, 15, 15, 0.95);
+    --gold-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+}
+
+/* --- Base Reset --- */
+* { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+html { scroll-behavior: smooth; }
+body {
+    background-color: var(--primary-dark);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-white);
+    line-height: 1.6;
+    overflow-x: hidden;
+    animation: smoothFadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* --- Typography --- */
+h1, h2, h3, h4 { font-family: 'Playfair Display', serif; color: var(--accent-gold); line-height: 1.2; }
+a { text-decoration: none; color: inherit; transition: var(--transition); }
+ul { list-style: none; }
+
+/* --- Reusable Components --- */
+.container { max-width: var(--container-width); margin: 0 auto; padding: 0 20px; }
+.section { padding: var(--section-padding); }
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--accent-gold);
+    color: #000; padding: 12px 28px; border: none; border-radius: 50px; 
+    font-weight: 600; cursor: pointer; transition: var(--transition);
+    display: inline-block; text-align: center; text-transform: uppercase;
+    letter-spacing: 1px; font-size: 14px;
+}
+.btn-primary:hover { background-color: var(--text-white); transform: translateY(-3px); box-shadow: var(--gold-shadow); }
+a:active, button:active { transform: scale(0.95); }
+
+/* --- 🌟 Premium Navbar Styles (Target Match) 🌟 --- */
+.navbar {
+    position: fixed; top: 0; left: 0; width: 100%; height: var(--header-height);
+    background: var(--glass-bg); backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1); z-index: 1000;
+}
+
+.nav-container {
+    display: flex; justify-content: space-between; align-items: center; 
+    width: 100%; height: 100%;
+}
+
+/* Logo Fixes - Professional Look */
+.logo {
+    display: flex; align-items: center; gap: 15px; text-decoration: none;
+    z-index: 2002; flex: 1;
+}
+.logo img {
+    max-height: 55px; /* Allows rectangular or complex logos */
+    width: auto; object-fit: contain; 
+}
+.logo-text {
+    font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; 
+    color: var(--text-white); letter-spacing: 2px; text-transform: uppercase;
+}
+
+/* Center Links */
+.nav-menu {
+    display: flex; align-items: center; justify-content: center; flex: 2;
+}
+.nav-links {
+    display: flex; gap: 35px;
+}
+.nav-links a { 
+    font-size: 13px; font-weight: 600; text-transform: uppercase; 
+    letter-spacing: 1px; color: var(--text-white); 
+    padding-bottom: 5px; border-bottom: 2px solid transparent;
+}
+.nav-links a:hover, .nav-links a.active { 
+    color: var(--accent-gold); border-bottom-color: var(--accent-gold); 
+}
+
+/* Right Actions (Lang & Login) */
+.nav-actions { 
+    display: flex; gap: 20px; align-items: center; justify-content: flex-end; flex: 1;
+}
+
+.lang-switch { 
+    display: flex; gap: 10px; align-items: center; 
+    border-right: 1px solid rgba(255,255,255,0.2); padding-right: 20px;
+}
+.lang-btn { 
+    background: transparent; border: none; color: var(--text-gray); 
+    font-size: 13px; font-weight: 600; cursor: pointer; text-transform: uppercase; 
+}
+.lang-btn.active, .lang-btn:hover { color: var(--accent-gold); }
+
+#navLogin, #navLogout, #navProfile { 
+    background: transparent; border: none; font-size: 13px; font-weight: 600; 
+    color: var(--text-white); text-transform: uppercase; letter-spacing: 1px; 
+    cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 0;
+}
+#navLogin:hover, #navLogout:hover { color: var(--accent-gold); }
+
+/* Mobile Menu Fixes */
+.menu-toggle {
+    display: none; font-size: 24px; color: var(--accent-gold); background: transparent; border: none; cursor: pointer; z-index: 2001;
+}
+
+@media (max-width: 1024px) {
+    .logo-text { font-size: 18px; }
+    .nav-links { gap: 20px; }
+}
+
+@media (max-width: 768px) {
+    .menu-toggle { display: block; }
+    .nav-menu {
+        position: absolute; top: var(--header-height); left: -100%; width: 100%; height: calc(100vh - var(--header-height));
+        background: var(--primary-dark); flex-direction: column; align-items: center; justify-content: flex-start;
+        padding-top: 40px; transition: 0.4s ease-in-out; border-top: 1px solid rgba(255, 215, 0, 0.1);
+    }
+    .nav-menu.active { left: 0; }
+    .nav-links { flex-direction: column; gap: 25px; text-align: center; margin-bottom: 30px; }
+    
+    .nav-actions { 
+        flex-direction: column; width: 100%; justify-content: center; align-items: center;
+    }
+    .lang-switch { 
+        border-right: none; padding-right: 0; border-bottom: 1px solid rgba(255,255,255,0.1); 
+        padding-bottom: 20px; margin-bottom: 20px; width: 80%; justify-content: center;
+    }
+}
+
+/* --- Custom Scrollbar & Animations --- */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--primary-dark); }
+::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--dark-gold); }
+
+@keyframes smoothFadeIn {
+    0% { opacity: 0; transform: translateY(15px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Utilities --- */
+.text-gold { color: var(--accent-gold); }
+.text-center { text-align: center; }
+.mt-20 { margin-top: 20px; }

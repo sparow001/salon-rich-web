@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Salon Rich</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+    
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+
+    <style>
+        /* 🌟 Premium Page Header */
+        .page-header {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1600&q=80') center/cover;
+            padding: 140px 20px 80px;
+            text-align: center;
+            border-bottom: 1px solid var(--accent-gold);
+        }
+
+        /* 🌟 Contact Section Styles */
+        .contact-container { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; margin: 50px auto; }
+
+        /* Left Side: Contact Info */
+        .contact-info-card { background: var(--primary-dark); padding: 40px; border-radius: 20px; border: 1px solid rgba(255, 215, 0, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .info-item { display: flex; align-items: flex-start; margin-bottom: 30px; }
+        .info-icon { font-size: 24px; color: var(--accent-gold); margin-right: 20px; background: rgba(255, 215, 0, 0.1); padding: 15px; border-radius: 50%; }
+        .info-content h3 { color: #fff; margin: 0 0 5px 0; font-size: 18px; }
+        .info-content p { color: var(--text-gray); margin: 0; line-height: 1.6; }
+        
+        .whatsapp-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            background: #25D366; color: white; padding: 15px 30px; border-radius: 12px;
+            text-decoration: none; font-weight: bold; font-size: 16px; width: 100%; transition: 0.3s;
+        }
+        .whatsapp-btn i { font-size: 24px; margin-right: 10px; }
+        .whatsapp-btn:hover { background: #1ebe57; transform: translateY(-3px); }
+
+        /* Right Side: Contact Form */
+        .contact-form-card { background: var(--secondary-dark); padding: 40px; border-radius: 20px; border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .contact-form-card h2 { color: var(--accent-gold); margin-bottom: 25px; font-family: 'Playfair Display', serif; }
+        .form-input { width: 100%; padding: 15px; margin-bottom: 20px; background: #111; border: 1px solid #333; border-radius: 8px; color: white; font-size: 15px; transition: 0.3s; }
+        .form-input:focus { border-color: var(--accent-gold); outline: none; box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+        textarea.form-input { resize: vertical; min-height: 120px; }
+
+        @media (max-width: 768px) { .contact-container { grid-template-columns: 1fr; } }
+
+        /* 🚨 Navbar Layout Fixes synced with Home 🚨 */
+        .nav-container { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; flex: 1; }
+        .logo img { max-height: 50px; width: auto; border-radius: 0; border: none; object-fit: contain; }
+        .logo-text { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: white; letter-spacing: 2px; text-transform: uppercase; }
+        .nav-menu { display: flex; align-items: center; justify-content: center; flex: 2; }
+        .nav-actions { display: flex; align-items: center; justify-content: flex-end; gap: 20px; flex: 1; }
+        
+        #navLogin, #navLogout, #navProfile {
+            background: transparent !important; border: none !important; color: white !important;
+            font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 0; text-decoration: none;
+        }
+        #navLogin:hover, #navLogout:hover { color: var(--accent-gold) !important; }
+        #navProfile { color: var(--accent-gold) !important; }
+
+        /* Mobile Menu Fix */
+        .menu-toggle { position: relative; z-index: 2001; display: none; }
+        @media (max-width: 992px) {
+            .nav-actions { display: none; } 
+            .menu-toggle { display: block; background: none; border: none; color: var(--accent-gold); font-size: 24px;}
+            .nav-menu { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; width: 100%; background: var(--secondary-dark); padding: 30px 0; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 1000; }
+            .nav-menu.active { display: flex !important; animation: slideDown 0.3s ease; }
+            .nav-actions { display: flex; flex-direction: column; gap: 20px; padding: 0 20px; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
+        .modal-content { background: linear-gradient(145deg, #1e1e1e, #121212); padding: 35px; border-radius: 24px; border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.8); color: white; width: 90%; max-width: 550px; animation: modalPopUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes modalPopUp { from { opacity: 0; transform: translateY(40px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .close-btn { color: #888; float: right; font-size: 28px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: -10px; }
+        .close-btn:hover { color: #FFD700; transform: scale(1.2); }
+        .form-group label { color: #ccc; font-size: 14px; margin-bottom: 10px; display: block; }
+        .date-selection-wrapper { position: relative; display: flex; align-items: center; gap: 10px; }
+        .calendar-btn { background: rgba(255, 215, 0, 0.1); border: 1px solid #FFD700; border-radius: 12px; font-size: 20px; cursor: pointer; padding: 10px 15px; transition: 0.3s; }
+        .calendar-btn:hover { background: #FFD700; color: #000; transform: translateY(-3px); }
+        .nav-links a.active { color: var(--accent-gold) !important; font-weight: bold; border-bottom: 2px solid var(--accent-gold); padding-bottom: 5px; transition: all 0.3s ease-in-out; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo" id="siteLogo">
+                <img src="https://cdn-icons-png.flaticon.com/512/1986/1986347.png" alt="Logo">
+                <span class="logo-text">SALON RICH</span>
+            </a>
+            
+            <div class="nav-menu" id="navMenu">
+                <ul class="nav-links">
+                    <li><a href="../index.html" data-i18n="home">Home</a></li>
+                    <li><a href="services.html" data-i18n="services">Services</a></li>
+                    <li><a href="gallery.html" data-i18n="gallery_nav">Gallery</a></li>
+                    <li><a href="about.html" data-i18n="about">About Us</a></li>
+                    <li><a href="contact.html" class="active" data-i18n="contact">Contact</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="lang-dropdown-container" style="position: relative; border-right: 1px solid rgba(255,255,255,0.2); padding-right: 15px; display: flex; align-items: center;">
+                        <button id="langToggleBtn" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px;">
+                            <i class="fas fa-globe"></i> <span id="currentLangText">EN</span> <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+                        </button>
+                        <div id="langDropdown" style="display: none; position: absolute; top: 100%; right: 15px; background: var(--secondary-dark); border: 1px solid var(--accent-gold); border-radius: 8px; padding: 10px 0; min-width: 120px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 3000;">
+                            <button class="lang-option" data-lang="en" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">English</button>
+                            <button class="lang-option" data-lang="si" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">සිංහල</button>
+                            <button class="lang-option" data-lang="ta" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">தமிழ்</button>
+                        </div>
+                    </div>
+                    
+                    <a href="login.html" id="navLogin"><i class="fas fa-user-circle" style="font-size: 18px;"></i> <span data-i18n="login">Login</span></a>
+                    <button id="navLogout" style="display: none;"><i class="fas fa-sign-out-alt" style="font-size: 18px;"></i> <span data-i18n="logout">Logout</span></button>
+                    <a href="my_bookings.html" id="navProfile" style="display: none;"><i class="fas fa-user-check" style="font-size: 18px;"></i> <span id="profileNameText">Profile</span></a>
+                </div>
+            </div>
+
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1 style="font-size: clamp(2.5rem, 6vw, 3.5rem); margin-bottom: 15px; color: var(--accent-gold); font-family: 'Playfair Display', serif;">Get In Touch</h1>
+            <p style="font-size: 1.2rem; color: #ddd; max-width: 600px; margin: 0 auto;">We would love to hear from you. Reach out for bookings, inquiries, or personalized advice.</p>
+        </div>
+    </header>
+
+    <section class="section container">
+        
+        <div class="contact-container">
+            <div class="contact-info-card">
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt info-icon"></i>
+                    <div class="info-content">
+                        <h3>Our Location</h3>
+                        <p>Salon Rich Premium,<br>123 Beauty Avenue,<br>Colombo 07, Sri Lanka.</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <i class="fas fa-phone-alt info-icon"></i>
+                    <div class="info-content">
+                        <h3>Call Us</h3>
+                        <p>+94 77 123 4567<br>+94 11 234 5678</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <i class="fas fa-clock info-icon"></i>
+                    <div class="info-content">
+                        <h3>Business Hours</h3>
+                        <p>Monday - Friday: 9:00 AM - 8:00 PM<br>Saturday - Sunday: 10:00 AM - 9:00 PM</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 40px;">
+                    <a href="https://wa.me/94771234567" target="_blank" class="whatsapp-btn">
+                        <i class="fab fa-whatsapp"></i> Chat with us on WhatsApp
+                    </a>
+                </div>
+            </div>
+
+            <div class="contact-form-card">
+                <h2>Send us a Message</h2>
+                <form id="contactForm">
+                    <input type="text" id="senderName" class="form-input" placeholder="Your Full Name" required>
+                    <input type="email" id="senderEmail" class="form-input" placeholder="Your Email Address" required>
+                    <input type="tel" id="senderPhone" class="form-input" placeholder="Your Phone Number">
+                    <textarea id="senderMessage" class="form-input" placeholder="How can we help you?" required></textarea>
+                    
+                    <button type="submit" class="btn-primary" style="width: 100%; padding: 15px; font-size: 16px; border-radius: 8px;">
+                        Send Message <i class="fas fa-paper-plane" style="margin-left: 8px;"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </section>
+
+    <footer class="footer" style="margin-top: 50px;">
+        <div class="container footer-grid">
+            <div class="footer-about">
+                <h2 class="logo-text" style="font-size: 28px; margin-bottom: 10px; color: var(--accent-gold);">SALON RICH</h2>
+                <p style="color: var(--text-gray); margin-top: 15px;">Your ultimate destination for premium beauty and grooming experiences in Sri Lanka.</p>
+            </div>
+            <div class="footer-links">
+                <h3 data-i18n="services">Quick Links</h3>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-hours">
+                <h3>Opening Hours</h3>
+                <p>Mon - Fri: 9:00 AM - 8:00 PM</p>
+                <p>Sat - Sun: 10:00 AM - 9:00 PM</p>
+            </div>
+        </div>
+        <div class="container text-center footer-bottom">
+            &copy; 2026 Salon Rich. All rights reserved. | Developed by Tharindu Hashan
+        </div>
+    </footer>
+
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h2 id="modalTitle" style="margin-top: 0; color: var(--accent-gold); margin-bottom: 25px; font-family: 'Playfair Display', serif;" data-i18n="modalTitle">
+                Book Appointment
+            </h2>
+            
+            <form id="bookingForm">
+                <input type="hidden" id="selectedService">
+                
+                <div class="form-group">
+                    <label data-i18n="selectDate">Select Date (DD/MM/YYYY):</label>
+                    <div class="quick-pills" style="margin-bottom: 15px;">
+                        <div class="pill active" id="pillToday">Today</div>
+                        <div class="pill" id="pillTomorrow">Tomorrow</div>
+                        <div class="pill" id="pillWeekend">This Weekend</div>
+                    </div>
+                    <div class="date-selection-wrapper">
+                        <div class="date-slider" id="dateSlider" style="flex-grow: 1;"></div>
+                        <button type="button" class="calendar-btn" id="btnOpenCalendar" title="Pick another date">📅</button>
+                        <input type="text" id="hiddenFlatpickr" style="display: none;"> 
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 25px;">
+                    <label data-i18n="selectTime">Select Time Slot:</label>
+                    <div id="timeSlotsContainer" class="slots-grid">
+                        <p style="color: var(--text-gray); font-size: 13px; grid-column: 1 / -1; text-align: center;">Loading premium slots...</p>
+                    </div>
+                </div>
+
+                <button type="submit" id="btnConfirmBooking" class="btn-primary" style="width: 100%; margin-top: 30px; padding: 16px; font-size: 16px; border-radius: 12px;" disabled data-i18n="confirmBookingBtn">
+                    Select a Time Slot
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="../js/home.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script type="module" src="../js/booking.js?v=3.2"></script>
+
+    <script type="module">
+        import { auth, db } from '../js/firebase-config.js';
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const navLogin = document.getElementById('navLogin');
+        const navLogout = document.getElementById('navLogout');
+        const navProfile = document.getElementById('navProfile');
+        const profileNameText = document.getElementById('profileNameText');
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if(navLogin) navLogin.style.display = 'none';
+                if(navLogout) navLogout.style.display = 'inline-flex';
+                if(navProfile) navProfile.style.display = 'inline-flex';
+                if(profileNameText) profileNameText.innerText = `Hi, ${user.displayName ? user.displayName.split(' ')[0] : 'Customer'}`; 
+            } else {
+                if(navLogin) navLogin.style.display = 'inline-flex';
+                if(navLogout) navLogout.style.display = 'none';
+                if(navProfile) navProfile.style.display = 'none';
+            }
+        });
+
+        navLogout?.addEventListener('click', async () => {
+            await signOut(auth);
+            window.location.reload();
+        });
+
+        // 🚨 Firebase Contact Form Logic
+        const contactForm = document.getElementById('contactForm');
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+
+            const name = document.getElementById('senderName').value;
+            const email = document.getElementById('senderEmail').value;
+            const phone = document.getElementById('senderPhone').value;
+            const message = document.getElementById('senderMessage').value;
+
+            try {
+                await addDoc(collection(db, "messages"), {
+                    name: name, email: email, phone: phone || "Not Provided",
+                    message: message, status: "Unread", createdAt: serverTimestamp()
+                });
+
+                alert("🎉 Thank you! Your message has been sent successfully. We will contact you soon.");
+                contactForm.reset();
+            } catch (error) {
+                console.error("Error sending message: ", error);
+                alert("Oops! Something went wrong. Please try again.");
+            } finally {
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+
+    <script>
+        // Hamburger Menu Logic
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+        const navLinks = document.querySelectorAll('.nav-links a, .nav-actions a, .nav-actions button'); 
+
+        menuToggle.addEventListener('click', () => { navMenu.classList.toggle('active'); });
+        navLinks.forEach(link => { link.addEventListener('click', () => { navMenu.classList.remove('active'); }); });
+
+        // Global Book Now Button Logic
+        document.querySelectorAll('.btn-book-global').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const dummyEvent = { preventDefault: () => {}, target: document.querySelector('body') };
+                document.getElementById('selectedService').value = "Premium Service";
+                document.dispatchEvent(new CustomEvent('click', { detail: dummyEvent }));
+                document.getElementById('bookingModal').style.display = 'flex';
+            });
+        });
+    </script>
+</body>
+</html>

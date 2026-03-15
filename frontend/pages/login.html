@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Salon Rich</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { margin: 0; background-color: #0F0F0F; font-family: 'Poppins', sans-serif; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .login-card { background: rgba(30, 30, 30, 0.9); padding: 40px; border-radius: 24px; border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.5); width: 100%; max-width: 420px; text-align: center; }
+        h1 { font-family: 'Playfair Display', serif; color: #FFD700; margin-bottom: 5px; }
+        .subtitle { color: #A0A0A0; font-size: 14px; margin-bottom: 30px; }
+
+        /* Form Styles */
+        .input-group { text-align: left; margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 13px; color: #ccc; margin-bottom: 8px; }
+        .input-group input { width: 100%; padding: 14px; background: #111; border: 1px solid #333; border-radius: 12px; color: white; transition: 0.3s; box-sizing: border-box; }
+        .input-group input:focus { border-color: #FFD700; outline: none; }
+
+        .btn-main { width: 100%; padding: 14px; background: #FFD700; color: black; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,215,0,0.3); }
+
+        .divider { margin: 25px 0; display: flex; align-items: center; color: #555; font-size: 12px; }
+        .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #333; margin: 0 10px; }
+
+        .google-btn { width: 100%; padding: 12px; background: white; color: black; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        .google-btn:hover { background: #f1f1f1; }
+
+        .toggle-link { margin-top: 25px; font-size: 14px; color: #A0A0A0; }
+        .toggle-link a { color: #FFD700; text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div style="font-size: 40px; margin-bottom: 10px;">✨</div>
+        <h1 id="authTitle">Welcome Back</h1>
+        <p class="subtitle" id="authSubtitle">Login to your Salon Rich account</p>
+
+        <form id="authForm">
+            <div class="input-group" id="nameGroup" style="display: none;">
+                <label>Full Name</label>
+                <input type="text" id="authName" placeholder="Enter your name">
+            </div>
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="authEmail" placeholder="example@mail.com" required>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="authPassword" placeholder="••••••••" required minlength="6">
+            </div>
+            <button type="submit" class="btn-main" id="submitBtn">Login</button>
+        </form>
+
+        <div class="divider">OR CONTINUE WITH</div>
+
+        <button id="googleLoginBtn" class="google-btn">
+            <img src="https://cdn-icons-png.flaticon.com/512/3002/300221.png" width="18" alt="Google">
+            Google Account
+        </button>
+
+        <div class="toggle-link" id="toggleText">
+            Don't have an account? <a href="#" onclick="toggleAuth(true)">Sign Up</a>
+        </div>
+    </div>
+
+    <script type="module" src="../js/login.js"></script>
+    <script>
+        let isSignUp = false;
+        function toggleAuth(signUp) {
+            isSignUp = signUp;
+            document.getElementById('authTitle').innerText = isSignUp ? "Create Account" : "Welcome Back";
+            document.getElementById('authSubtitle').innerText = isSignUp ? "Join our premium beauty club" : "Login to your Salon Rich account";
+            document.getElementById('submitBtn').innerText = isSignUp ? "Sign Up" : "Login";
+            document.getElementById('nameGroup').style.display = isSignUp ? "block" : "none";
+            document.getElementById('toggleText').innerHTML = isSignUp ? 
+                `Already have an account? <a href="#" onclick="toggleAuth(false)">Login</a>` : 
+                `Don't have an account? <a href="#" onclick="toggleAuth(true)">Sign Up</a>`;
+        }
+    </script>
+</body>
+</html>
