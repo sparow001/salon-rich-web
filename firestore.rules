@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. සහායක Functions (Code එක නැවත නැවත නොලියා ඉන්න)
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      // User ගේ document එකේ role එක 'admin' ද කියලා බලනවා
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // 2. Users Collection (පරිශීලක දත්ත)
+    match /users/{userId} {
+      // තමන්ගේ දත්ත තමන්ට හෝ Admin ට විතරක් කියවන්න/වෙනස් කරන්න පුළුවන්
+      allow read, update: if isOwner(userId) || isAdmin();
+      // අලුත් කෙනෙක්ට තමන්ගේම අයිඩී එකෙන් විතරක් රෙජිස්ටර් වෙන්න පුළුවන්
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow delete: if isAdmin();
+    }
+
+    // 3. Bookings Collection (වෙන්කිරීම්)
+    match /bookings/{bookingId} {
+      // ලොග් වෙලා ඉන්න ඕනෑම කෙනෙක්ට Booking එකක් දාන්න පුළුවන්
+      allow create: if isAuthenticated();
+      // තමන්ගේ Booking එක තමන්ට හෝ Admin ට විතරක් බලන්න සහ Edit (Cancel) කරන්න පුළුවන්
+      allow read, update: if isAdmin() || (isAuthenticated() && request.auth.token.email == resource.data.userEmail);
+      // අනුන්ගේ Bookings මකන්න බැහැ, Admin ට විතරයි පුළුවන්
+      allow delete: if isAdmin();
+    }
+
+    // 4. Messages Collection (Contact Us ෆෝරමය)
+    match /messages/{messageId} {
+      // ලොග් වුණත් නැතත් ඕනෑම කෙනෙක්ට මැසේජ් එකක් එවන්න පුළුවන්
+      allow create: if true; 
+      // හැබැයි ඒ මැසේජ් කියවන්න, වෙනස් කරන්න, මකන්න පුළුවන් Admin ට විතරයි
+      allow read, update, delete: if isAdmin();
+    }
+
+    // 5. Public Collections (පින්තූර සහ සේවා)
+    match /gallery/{imageId} {
+      // ඕනෑම කෙනෙක්ට පින්තූර පේන්න ඕනේ
+      allow read: if true;
+      // අලුත් පින්තූර දාන්න සහ මකන්න පුළුවන් Admin ට විතරයි
+      allow write: if isAdmin();
+    }
+  }
+}
