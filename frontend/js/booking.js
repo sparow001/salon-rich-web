@@ -1,8 +1,8 @@
 // frontend/js/booking.js
 
 import { auth, db } from './firebase-config.js';
-import { createBookingAPI } from './api.js';
-import { collection, query, where, onSnapshot, doc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+// API import එක ඉවත් කර ඇත (කෙලින්ම Firestore භාවිතා කරන නිසා)
+import { collection, query, where, onSnapshot, doc, getDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const modal = document.getElementById('bookingModal');
 const closeBtn = document.getElementById('closeModal');
@@ -47,12 +47,13 @@ async function fetchHolidays() {
         if (docSnap.exists() && docSnap.data().blockedDates) {
             blockedHolidays = docSnap.data().blockedDates;
         }
-        fp.set("disable", [ function(date) { return blockedHolidays.includes(formatDateForDB(date)); } ]);
+        if(window.fp) {
+             window.fp.set("disable", [ function(date) { return blockedHolidays.includes(formatDateForDB(date)); } ]);
+        }
     } catch (error) { console.error("Error fetching holidays:", error); }
 }
 
-// 🚨 FIX: positionElement ඉවත් කර ඇත (Calendar දැන් මැදින් ඕපන් වේ)
-let fp = flatpickr("#hiddenFlatpickr", {
+window.fp = flatpickr("#hiddenFlatpickr", {
     dateFormat: "Y-m-d",
     minDate: "today",
     disableMobile: true,
@@ -61,7 +62,7 @@ let fp = flatpickr("#hiddenFlatpickr", {
     }
 });
 
-btnOpenCalendar.addEventListener('click', () => fp.open());
+btnOpenCalendar.addEventListener('click', () => window.fp.open());
 
 function renderDateSlider() {
     dateSlider.innerHTML = '';
@@ -262,7 +263,7 @@ function renderSlotsUI(selectedDateStr, bookedData) {
 }
 
 // ==========================================
-// 3. SUBMIT BOOKING (With Double-Booking Prevention & Spinner)
+// 3. SUBMIT BOOKING (Direct to Firestore)
 // ==========================================
 bookingForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -279,6 +280,7 @@ bookingForm.addEventListener('submit', async (e) => {
         btnConfirmBooking.innerHTML = `<span class="btn-spinner"></span> Processing...`;
         btnConfirmBooking.disabled = true;
 
+        // Check if slot is taken (prevent double booking)
         const qCheck = query(collection(db, "bookings"), where("date", "==", selectedDateDB), where("time", "==", selectedTimeSlot));
         const slotSnap = await getDocs(qCheck);
         
@@ -294,18 +296,22 @@ bookingForm.addEventListener('submit', async (e) => {
             return;
         }
 
+        // Create booking data securely 
         const bookingData = {
             userName: user.displayName || "Customer",
             userEmail: user.email,
             service: selectedServiceInput.value,
             date: selectedDateDB,       
             displayDate: selectedDateUI, 
-            time: selectedTimeSlot 
+            time: selectedTimeSlot,
+            status: "Confirmed",
+            createdAt: new Date().toISOString()
         };
 
-        const result = await createBookingAPI(bookingData); 
+        // 🔥 Direct Firestore Save (Bypassing insecure local server)
+        await addDoc(collection(db, "bookings"), bookingData); 
         
-        alert("🎉 " + result.message); 
+        alert("🎉 Booking Confirmed Successfully!"); 
         modal.style.display = 'none';
 
     } catch (error) {
