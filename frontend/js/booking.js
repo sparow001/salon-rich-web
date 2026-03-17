@@ -1,7 +1,6 @@
 // frontend/js/booking.js
 
 import { auth, db } from './firebase-config.js';
-// API import එක ඉවත් කර ඇත (කෙලින්ම Firestore භාවිතා කරන නිසා)
 import { collection, query, where, onSnapshot, doc, getDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const modal = document.getElementById('bookingModal');
@@ -22,7 +21,7 @@ let selectedTimeSlot = null;
 let realtimeListener = null;
 let blockedHolidays = []; 
 
-// 🌟 Shimmer Animation Style (Loading Effect)
+// 🌟 Shimmer Animation Style
 const style = document.createElement('style');
 style.innerHTML = `
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } } 
@@ -36,10 +35,10 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
+
 // ==========================================
 // 1. SMART DATE SELECTION LOGIC
 // ==========================================
-
 async function fetchHolidays() {
     try {
         const docRef = doc(db, "settings", "holidays");
@@ -141,22 +140,21 @@ function formatDateForUI(d) { return `${String(d.getDate()).padStart(2,'0')}/${S
 // ==========================================
 // 2. MODAL & PRE-LOGIN CHECK LOGIC
 // ==========================================
-
 document.addEventListener('click', async (e) => {
+    // 🚨 Safe check to prevent closest() errors
+    if (!e.target || typeof e.target.closest !== 'function') return;
+
     const bookBtn = e.target.closest('.service-card .btn-primary');
     
     if (bookBtn) {
         e.preventDefault(); 
         
-        // 🚨 PRE-LOGIN CHECK: ලොග් වෙලාද නැද්ද බලනවා (බොත්තම එබූ සැණින්)
         const user = auth.currentUser;
         if (!user) {
-            // ලොග් වී නොමැති නම් කෙළින්ම Login Page එකට යවයි
             window.location.href = 'pages/login.html';
             return;
         }
 
-        // ලොග් වී ඇත්නම් පමණක් Modal එක පෙන්වයි
         const card = bookBtn.closest('.service-card');
         const serviceName = card.querySelector('h3').innerText;
         
@@ -169,12 +167,25 @@ document.addEventListener('click', async (e) => {
         setActivePill('pillToday');
 
         modal.style.display = 'flex'; 
+        // 🚨 1. Mobile App Fix: Disable background scrolling
+        document.body.style.overflow = 'hidden'; 
     }
 });
 
-closeBtn.addEventListener('click', () => {
+function closeModalAndReset() {
     modal.style.display = 'none';
+    // 🚨 2. Mobile App Fix: Re-enable background scrolling
+    document.body.style.overflow = ''; 
     if(realtimeListener) realtimeListener(); 
+}
+
+closeBtn.addEventListener('click', closeModalAndReset);
+
+// Close modal when clicking outside the box
+window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        closeModalAndReset();
+    }
 });
 
 function generateAllSlots() {
@@ -215,11 +226,6 @@ function renderSlotsUI(selectedDateStr, bookedData) {
     const now = new Date();
     const currentDateStr = formatDateForDB(now);
     const currentTimeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-
-    const bookedCount = bookedData.length;
-    if ((bookedCount / allSlots.length) * 100 >= 50 && selectedDateStr >= currentDateStr) {
-        timeSlotsContainer.innerHTML += `<div style="grid-column: 1 / -1; margin-bottom: 10px; text-align: center;"><span style="background: rgba(244, 67, 54, 0.1); color: #f44336; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; border: 1px solid #f44336;">🔥 Filling Fast: High Demand Today!</span></div>`;
-    }
 
     allSlots.forEach(slot => {
         const slotDiv = document.createElement('div');
@@ -263,7 +269,7 @@ function renderSlotsUI(selectedDateStr, bookedData) {
 }
 
 // ==========================================
-// 3. SUBMIT BOOKING (Direct to Firestore)
+// 3. SUBMIT BOOKING
 // ==========================================
 bookingForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -280,7 +286,6 @@ bookingForm.addEventListener('submit', async (e) => {
         btnConfirmBooking.innerHTML = `<span class="btn-spinner"></span> Processing...`;
         btnConfirmBooking.disabled = true;
 
-        // Check if slot is taken (prevent double booking)
         const qCheck = query(collection(db, "bookings"), where("date", "==", selectedDateDB), where("time", "==", selectedTimeSlot));
         const slotSnap = await getDocs(qCheck);
         
@@ -296,7 +301,6 @@ bookingForm.addEventListener('submit', async (e) => {
             return;
         }
 
-        // Create booking data securely 
         const bookingData = {
             userName: user.displayName || "Customer",
             userEmail: user.email,
@@ -308,11 +312,10 @@ bookingForm.addEventListener('submit', async (e) => {
             createdAt: new Date().toISOString()
         };
 
-        // 🔥 Direct Firestore Save (Bypassing insecure local server)
         await addDoc(collection(db, "bookings"), bookingData); 
         
         alert("🎉 Booking Confirmed Successfully!"); 
-        modal.style.display = 'none';
+        closeModalAndReset(); // Uses the new function to reset overflow
 
     } catch (error) {
         alert("Error: " + error.message);

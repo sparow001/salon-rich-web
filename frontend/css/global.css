@@ -167,3 +167,47 @@ a:active, button:active { transform: scale(0.95); }
 .text-gold { color: var(--accent-gold); }
 .text-center { text-align: center; }
 .mt-20 { margin-top: 20px; }
+
+/* 📱 Mobile App-like Modal Fixes */
+.modal {
+    display: none; 
+    position: fixed !important; 
+    top: 0 !important; 
+    left: 0 !important; 
+    width: 100vw !important; 
+    height: 100vh !important; 
+    background-color: rgba(0, 0, 0, 0.75) !important; 
+    backdrop-filter: blur(8px);
+    z-index: 9999 !important; 
+    align-items: center !important; 
+    justify-content: center !important;
+    padding: 15px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important; /* පිටිපස්සේ scroll වීම සම්පූර්ණයෙන්ම නවත්වයි */
+}
+
+.modal-content {
+    background: linear-gradient(145deg, #1e1e1e, #121212) !important;
+    padding: 25px 20px !important; 
+    border-radius: 20px !important; 
+    width: 100% !important; 
+    max-width: 450px !important;
+    max-height: 85vh !important; /* Box එක තිරයෙන් එළියට යෑම නවත්වයි */
+    overflow-y: auto !important; /* Box එක ඇතුළ පමණක් scroll වීමට සලස්වයි */
+    box-sizing: border-box !important;
+    position: relative !important;
+    margin: auto !important;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8) !important; 
+}
+
+/* Modal එක ඇතුළත Scrollbar එක ලස්සන කිරීම */
+.modal-content::-webkit-scrollbar {
+    width: 5px;
+}
+.modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+.modal-content::-webkit-scrollbar-thumb {
+    background: var(--accent-gold, #FFD700);
+    border-radius: 10px;
+}
