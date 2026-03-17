@@ -168,45 +168,48 @@ a:active, button:active { transform: scale(0.95); }
 .text-center { text-align: center; }
 .mt-20 { margin-top: 20px; }
 
-/* 🚨 BULLETPROOF MODAL CENTERING (Overrides all old codes) 🚨 */
-.modal {
-    position: fixed !important; 
-    inset: 0 !important; /* top: 0, left: 0, bottom: 0, right: 0 එකවර දමයි */
-    width: 100% !important; 
-    height: 100% !important; 
-    background-color: rgba(0, 0, 0, 0.85) !important; 
-    backdrop-filter: blur(8px) !important; 
-    z-index: 9999 !important; 
-    
-    /* 🎯 අනිවාර්යයෙන්ම මැදට ගැනීම */
-    display: none; /* JS එකෙන් Modal එක ඕපන් කරද්දී මේක Flex බවට පත් කරයි */
-    align-items: center !important; 
-    justify-content: center !important;
-    
-    padding: 15px !important;
-    box-sizing: border-box !important;
+/* 🌟 FINAL PERFECT MODAL UI (PC, Tablet, Mobile) 🌟 */
+#bookingModal.modal {
+    display: none; /* බොත්තම එබුවම JS එකෙන් මේක Flex කරයි */
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh; 
+    background-color: rgba(0, 0, 0, 0.85); 
+    backdrop-filter: blur(10px); 
+    z-index: 99999; 
+    align-items: center; 
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-.modal-content {
-    /* පරණ Margin සහ Top අගයන් බලහත්කාරයෙන් මැකීම */
-    margin: 0 !important; 
-    top: 0 !important; 
-    transform: translateY(0) !important; 
-    
-    position: relative !important;
-    background: linear-gradient(145deg, #1e1e1e, #121212) !important;
-    padding: 30px !important; 
-    border-radius: 20px !important; 
-    width: 100% !important; 
-    max-width: 450px !important; 
-    max-height: 85vh !important; /* Phone වලදී තිරයෙන් එළියට යෑම නවත්වයි */
-    overflow-y: auto !important; /* Box එක ඇතුළ පමණක් Scroll වීම */
-    
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,1), 0 0 0 1px rgba(255, 215, 0, 0.2) !important;
-    box-sizing: border-box !important;
+#bookingModal .modal-content {
+    position: relative;
+    background: linear-gradient(145deg, #1A1A1A, #0F0F0F);
+    padding: 30px; 
+    border-radius: 20px; 
+    width: 100%; 
+    max-width: 450px; 
+    max-height: 85vh; 
+    overflow-y: auto; 
+    margin: 0; 
+    top: auto;
+    transform: none;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 0 1px rgba(255, 215, 0, 0.3);
+    box-sizing: border-box;
 }
 
 /* Scrollbar Design */
-.modal-content::-webkit-scrollbar { width: 5px; }
-.modal-content::-webkit-scrollbar-track { background: transparent; }
-.modal-content::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 10px; }
+#bookingModal .modal-content::-webkit-scrollbar { width: 6px; }
+#bookingModal .modal-content::-webkit-scrollbar-track { background: transparent; }
+#bookingModal .modal-content::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 10px; }
+
+/* Mobile View Adjustments */
+@media (max-width: 480px) {
+    #bookingModal .modal-content {
+        padding: 20px 15px;
+        max-height: 90vh;
+    }
+}

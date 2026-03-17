@@ -138,13 +138,17 @@ function formatDateForUI(d) { return `${String(d.getDate()).padStart(2,'0')}/${S
 
 
 // ==========================================
-// 2. MODAL & PRE-LOGIN CHECK LOGIC
+// 2. MODAL & PRE-LOGIN CHECK LOGIC (FIXED)
 // ==========================================
 document.addEventListener('click', async (e) => {
     // 🚨 Safe check to prevent closest() errors
     if (!e.target || typeof e.target.closest !== 'function') return;
 
-    const bookBtn = e.target.closest('.service-card .btn-primary');
+    // Service Card බොත්තම් සහ Main Book (Global) බොත්තම් දෙකම අල්ලගැනීම
+    const serviceBtn = e.target.closest('.service-card .btn-primary');
+    const globalBtn = e.target.closest('.btn-book-global');
+    
+    const bookBtn = serviceBtn || globalBtn;
     
     if (bookBtn) {
         e.preventDefault(); 
@@ -155,8 +159,15 @@ document.addEventListener('click', async (e) => {
             return;
         }
 
-        const card = bookBtn.closest('.service-card');
-        const serviceName = card.querySelector('h3').innerText;
+        // Service එකක් තෝරලා නැත්නම් සාමාන්‍ය Booking එකක් ලෙස දැමීම
+        let serviceName = "General Booking";
+        if (serviceBtn) {
+            const card = serviceBtn.closest('.service-card');
+            if (card) {
+                const titleEl = card.querySelector('h3');
+                if (titleEl) serviceName = titleEl.innerText;
+            }
+        }
         
         selectedServiceInput.value = serviceName;
         modalTitle.innerText = `Book: ${serviceName}`;
