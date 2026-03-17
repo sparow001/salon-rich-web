@@ -4,38 +4,150 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Salon Rich</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        body { margin: 0; background-color: #0F0F0F; font-family: 'Poppins', sans-serif; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .login-card { background: rgba(30, 30, 30, 0.9); padding: 40px; border-radius: 24px; border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.5); width: 100%; max-width: 420px; text-align: center; }
-        h1 { font-family: 'Playfair Display', serif; color: #FFD700; margin-bottom: 5px; }
-        .subtitle { color: #A0A0A0; font-size: 14px; margin-bottom: 30px; }
+        :root {
+            --gold: #FFD700;
+            --gold-hover: #e6c200;
+            --dark-bg: #0F0F0F;
+            --card-bg: #1A1A1A;
+            --input-bg: #242424;
+            --text-main: #FFFFFF;
+            --text-muted: #A0A0A0;
+        }
 
-        /* Form Styles */
-        .input-group { text-align: left; margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 13px; color: #ccc; margin-bottom: 8px; }
-        .input-group input { width: 100%; padding: 14px; background: #111; border: 1px solid #333; border-radius: 12px; color: white; transition: 0.3s; box-sizing: border-box; }
-        .input-group input:focus { border-color: #FFD700; outline: none; }
+        body { 
+            margin: 0; 
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            font-family: 'Poppins', sans-serif; 
+            color: var(--text-main); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            padding: 15px; 
+            box-sizing: border-box;
+        }
 
-        .btn-main { width: 100%; padding: 14px; background: #FFD700; color: black; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,215,0,0.3); }
+        /* ආපසු යන ලින්ක් එක (Back to Home) */
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.3s;
+        }
+        .back-link:hover { transform: translateX(-3px); }
 
-        .divider { margin: 25px 0; display: flex; align-items: center; color: #555; font-size: 12px; }
+        .login-card { 
+            background: var(--card-bg); 
+            padding: 35px 30px; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255, 215, 0, 0.1); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6); 
+            width: 100%; 
+            max-width: 380px; 
+            text-align: center; 
+        }
+
+        .logo-icon { font-size: 32px; margin-bottom: 5px; }
+        h1 { font-family: 'Playfair Display', serif; color: var(--gold); margin: 0 0 5px; font-size: 26px;}
+        .subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 25px; }
+
+        .input-group { text-align: left; margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 12px; color: #ccc; margin-bottom: 6px; font-weight: 500;}
+        .input-group input { 
+            width: 100%; 
+            padding: 12px 15px; 
+            background: var(--input-bg); 
+            border: 1px solid #333; 
+            border-radius: 10px; 
+            color: white; 
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            transition: 0.3s; 
+            box-sizing: border-box; 
+        }
+        .input-group input:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 0 2px rgba(255,215,0,0.1); }
+
+        .btn-main { 
+            width: 100%; 
+            padding: 12px; 
+            background: var(--gold); 
+            color: black; 
+            border: none; 
+            border-radius: 10px; 
+            font-weight: 600; 
+            font-size: 14px;
+            cursor: pointer; 
+            transition: 0.3s; 
+            margin-top: 5px;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-main:hover { background: var(--gold-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,215,0,0.2); }
+        .btn-main:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .divider { margin: 20px 0; display: flex; align-items: center; color: #666; font-size: 11px; letter-spacing: 1px;}
         .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #333; margin: 0 10px; }
 
-        .google-btn { width: 100%; padding: 12px; background: white; color: black; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
-        .google-btn:hover { background: #f1f1f1; }
+        .google-btn { 
+            width: 100%; 
+            padding: 11px; 
+            background: white; 
+            color: black; 
+            border: none; 
+            border-radius: 10px; 
+            font-weight: 500; 
+            font-size: 14px;
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            transition: 0.3s; 
+            font-family: 'Poppins', sans-serif;
+        }
+        .google-btn:hover { background: #f1f1f1; transform: translateY(-1px); }
 
-        .toggle-link { margin-top: 25px; font-size: 14px; color: #A0A0A0; }
-        .toggle-link a { color: #FFD700; text-decoration: none; font-weight: 600; }
+        .toggle-link { margin-top: 20px; font-size: 13px; color: var(--text-muted); }
+        .toggle-link a { color: var(--gold); text-decoration: none; font-weight: 600; transition: 0.3s; }
+        .toggle-link a:hover { text-decoration: underline; }
+
+        /* ලෝඩ් වෙන Animation එක */
+        .spinner {
+            width: 14px; height: 14px; border: 2px solid rgba(0,0,0,0.2);
+            border-radius: 50%; border-top-color: #000; animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* කුඩා ෆෝන් සඳහා Scroll නොවන ලෙස සකස් කිරීම */
+        @media (max-height: 650px) {
+            .login-card { padding: 25px 20px; }
+            .logo-icon { font-size: 24px; }
+            h1 { font-size: 22px; }
+            .subtitle { margin-bottom: 15px; }
+            .input-group { margin-bottom: 12px; }
+            .divider { margin: 15px 0; }
+        }
     </style>
 </head>
 <body>
 
+    <a href="../index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+
     <div class="login-card">
-        <div style="font-size: 40px; margin-bottom: 10px;">✨</div>
+        <div class="logo-icon">✨</div>
         <h1 id="authTitle">Welcome Back</h1>
         <p class="subtitle" id="authSubtitle">Login to your Salon Rich account</p>
 
@@ -69,13 +181,25 @@
 
     <script type="module" src="../js/login.js"></script>
     <script>
+        // Toggle Logic for Login / Sign Up
         let isSignUp = false;
         function toggleAuth(signUp) {
             isSignUp = signUp;
             document.getElementById('authTitle').innerText = isSignUp ? "Create Account" : "Welcome Back";
             document.getElementById('authSubtitle').innerText = isSignUp ? "Join our premium beauty club" : "Login to your Salon Rich account";
             document.getElementById('submitBtn').innerText = isSignUp ? "Sign Up" : "Login";
-            document.getElementById('nameGroup').style.display = isSignUp ? "block" : "none";
+            
+            const nameGroup = document.getElementById('nameGroup');
+            const authName = document.getElementById('authName');
+            
+            if (isSignUp) {
+                nameGroup.style.display = "block";
+                authName.required = true;
+            } else {
+                nameGroup.style.display = "none";
+                authName.required = false;
+            }
+            
             document.getElementById('toggleText').innerHTML = isSignUp ? 
                 `Already have an account? <a href="#" onclick="toggleAuth(false)">Login</a>` : 
                 `Don't have an account? <a href="#" onclick="toggleAuth(true)">Sign Up</a>`;

@@ -1,6 +1,7 @@
 import { auth, db } from './firebase-config.js';
 import { 
-    signInWithPopup, 
+    signInWithRedirect, 
+    getRedirectResult,
     GoogleAuthProvider, 
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, 
@@ -25,16 +26,40 @@ async function syncUserToFirestore(user, name = null) {
     }
 }
 
+// 🌟 Google Redirect එකෙන් ආපසු ආවද කියා පරීක්ෂා කිරීම
+async function checkRedirectResult() {
+    try {
+        const result = await getRedirectResult(auth);
+        if (result && result.user) {
+            // Popup නැතුව ලොග් වුණාම කෙලින්ම Database එකට දාලා Home එකට යවනවා
+            await syncUserToFirestore(result.user);
+            window.location.replace('../index.html');
+        }
+    } catch (error) {
+        console.error("Google Sign-In Error:", error);
+        alert("Error logging in: " + error.message);
+    }
+}
+
+// පිටුව ලෝඩ් වෙද්දීම මේක චෙක් කරනවා
+checkRedirectResult();
+
 // 1. Email/Password Auth
 authForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('authEmail').value;
     const password = document.getElementById('authPassword').value;
     const name = document.getElementById('authName').value;
-    const isSignUp = document.getElementById('nameGroup').style.display === 'block';
+    
+    const isSignUpMode = document.getElementById('nameGroup').style.display === 'block';
+    const submitBtn = document.getElementById('submitBtn');
 
     try {
-        if (isSignUp) {
+        // Loading Animation එක පෙන්වීම
+        submitBtn.innerHTML = '<span class="spinner"></span> Processing...';
+        submitBtn.disabled = true;
+
+        if (isSignUpMode) {
             const res = await createUserWithEmailAndPassword(auth, email, password);
             await updateProfile(res.user, { displayName: name });
             await syncUserToFirestore(res.user, name);
@@ -44,17 +69,15 @@ authForm.addEventListener('submit', async (e) => {
         window.location.replace('../index.html');
     } catch (err) {
         alert(err.message);
+        submitBtn.innerHTML = isSignUpMode ? "Sign Up" : "Login";
+        submitBtn.disabled = false;
     }
 });
 
-// 2. Google Login
-googleBtn.addEventListener('click', async () => {
+// 2. Google Login (Popup වෙනුවට Redirect ක්‍රමය)
+googleBtn.addEventListener('click', () => {
     const provider = new GoogleAuthProvider();
-    try {
-        const res = await signInWithPopup(auth, provider);
-        await syncUserToFirestore(res.user);
-        window.location.replace('../index.html');
-    } catch (err) {
-        console.error(err);
-    }
+    googleBtn.innerHTML = '<span class="spinner" style="border-top-color:#000;"></span> Redirecting...';
+    googleBtn.disabled = true;
+    signInWithRedirect(auth, provider);
 });
