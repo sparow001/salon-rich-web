@@ -4,6 +4,7 @@ import { auth, db } from './firebase-config.js';
 import { collection, query, where, onSnapshot, doc, getDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
+// DOM Elements
 const bookingForm = document.getElementById('bookingForm');
 const selectedServiceInput = document.getElementById('selectedService');
 const modalTitle = document.getElementById('modalTitle');
@@ -13,25 +14,26 @@ const dateSlider = document.getElementById('dateSlider');
 const btnOpenCalendar = document.getElementById('btnOpenCalendar');
 const pills = document.querySelectorAll('.pill');
 
+// Global State
 let selectedDateDB = null; 
 let selectedDateUI = null; 
 let selectedTimeSlot = null;
 let realtimeListener = null;
 let blockedHolidays = []; 
 
-// 🌟 URL එකෙන් Service නම ලබා ගැනීම
+// 1. URL එකෙන් Service නම ලබා ගැනීම සහ UI එකට දැමීම
 const urlParams = new URLSearchParams(window.location.search);
 const serviceFromURL = urlParams.get('service') || 'General Booking';
-if(modalTitle) modalTitle.innerText = `Book: ${serviceFromURL}`;
-if(selectedServiceInput) selectedServiceInput.value = serviceFromURL;
+if (modalTitle) modalTitle.innerText = `Book: ${serviceFromURL}`;
+if (selectedServiceInput) selectedServiceInput.value = serviceFromURL;
 
-// 🌟 User ලොග් වෙලාදැයි පරීක්ෂා කිරීම (Page Load එකේදීම)
+// 2. Authentication පරීක්ෂාව සහ ආරම්භක දත්ත ලෝඩ් කිරීම
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
-        // ලොග් වෙලා නැත්නම් ආපහු Login එකට යවනවා (අලුත් ෆයිල් නම සමඟ)
+        // ලොග් වෙලා නැත්නම් Login පේජ් එකට යවනවා (අපිට ඕන සර්විස් එකත් එක්කම)
         window.location.replace(`login.html?redirect=booking_time.html?service=${encodeURIComponent(serviceFromURL)}`);
     } else {
-        // ලොග් වෙලා නම් Booking ලොජික් එක පටන් ගන්නවා
+        // ලොග් වෙලා නම් පමණක් සිස්ටම් එක පටන් ගන්නවා
         await fetchHolidays(); 
         renderDateSlider();
         handleDateSelection(new Date()); 
@@ -39,6 +41,7 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
+// 3. නිවාඩු දින (Holidays) ලබා ගැනීම
 async function fetchHolidays() {
     try {
         const docRef = doc(db, "settings", "holidays");
@@ -46,25 +49,28 @@ async function fetchHolidays() {
         if (docSnap.exists() && docSnap.data().blockedDates) {
             blockedHolidays = docSnap.data().blockedDates;
         }
-        if(window.fp) {
+        // Flatpickr එකට නිවාඩු දින ලබා දීම
+        if (window.fp) {
              window.fp.set("disable", [ function(date) { return blockedHolidays.includes(formatDateForDB(date)); } ]);
         }
     } catch (error) { console.error("Error fetching holidays:", error); }
 }
 
+// 4. Flatpickr (Calendar) සැකසුම්
 window.fp = flatpickr("#hiddenFlatpickr", {
     dateFormat: "Y-m-d",
     minDate: "today",
     disableMobile: true,
     onChange: function(selectedDates) {
-        if(selectedDates.length > 0) handleDateSelection(selectedDates[0]);
+        if (selectedDates.length > 0) handleDateSelection(selectedDates[0]);
     }
 });
 
 btnOpenCalendar?.addEventListener('click', () => window.fp.open());
 
+// 5. Date Slider එක නිර්මාණය කිරීම
 function renderDateSlider() {
-    if(!dateSlider) return;
+    if (!dateSlider) return;
     dateSlider.innerHTML = '';
     const today = new Date();
     
@@ -81,7 +87,7 @@ function renderDateSlider() {
         card.classList.add('date-card');
         card.setAttribute('data-date', dateDB);
         
-        if(isHoliday) {
+        if (isHoliday) {
             card.innerHTML = `<span class="day">${dayName}</span><span class="date" style="color: #555;">${dateNum}</span><span style="font-size: 8px; color: #f44336; margin-top:2px; font-weight:bold;">CLOSED</span>`;
             card.style.opacity = '0.5';
             card.style.cursor = 'not-allowed';
@@ -94,6 +100,7 @@ function renderDateSlider() {
     }
 }
 
+// 6. දිනයක් තේරූ විට ක්‍රියාත්මක වන ලොජික් එක
 function handleDateSelection(dateObj) {
     selectedDateDB = formatDateForDB(dateObj);       
     
@@ -125,6 +132,7 @@ function handleDateSelection(dateObj) {
     loadTimeSlots(selectedDateDB);
 }
 
+// Quick Pills සඳහා Events
 document.getElementById('pillToday')?.addEventListener('click', () => { handleDateSelection(new Date()); setActivePill('pillToday'); });
 document.getElementById('pillTomorrow')?.addEventListener('click', () => { const tmr = new Date(); tmr.setDate(tmr.getDate() + 1); handleDateSelection(tmr); setActivePill('pillTomorrow'); });
 document.getElementById('pillWeekend')?.addEventListener('click', () => { const d = new Date(); d.setDate(d.getDate() + (6 - d.getDay() + 7) % 7); handleDateSelection(d); setActivePill('pillWeekend'); });
@@ -134,19 +142,7 @@ function setActivePill(id) {
     document.getElementById(id)?.classList.add('active');
 }
 
-function formatDateForDB(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-function formatDateForUI(d) { return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`; }
-
-function generateAllSlots() {
-    const slots = [];
-    for (let h = 9; h < 20; h++) { 
-        for (let m = 0; m < 60; m += 10) {
-            slots.push(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`); 
-        }
-    }
-    return slots;
-}
-
+// 7. Time Slots දත්ත Firestore එකෙන් ලබා ගැනීම (Real-time)
 function loadTimeSlots(dbDateStr) {
     timeSlotsContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 13px; grid-column: 1 / -1; text-align: center;">Checking availability...</p>';
 
@@ -158,16 +154,23 @@ function loadTimeSlots(dbDateStr) {
         const bookingsList = [];
         snapshot.forEach(doc => {
             const data = doc.data();
-            if(data.status !== "Cancelled") bookingsList.push(data);
+            if (data.status !== "Cancelled") bookingsList.push(data);
         });
         
         renderSlotsUI(dbDateStr, bookingsList);
     });
 }
 
+// 8. Time Slots UI එකට පෙන්වීම
 function renderSlotsUI(selectedDateStr, bookedData) {
     timeSlotsContainer.innerHTML = ''; 
-    const allSlots = generateAllSlots();
+    const allSlots = [];
+    // පෙ.ව. 9 සිට ප.ව. 8 දක්වා විනාඩි 10 කින් 10 ට ස්ලොට්ස් හැදීම
+    for (let h = 9; h < 20; h++) { 
+        for (let m = 0; m < 60; m += 10) {
+            allSlots.push(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`); 
+        }
+    }
     
     const now = new Date();
     const currentDateStr = formatDateForDB(now);
@@ -209,9 +212,7 @@ function renderSlotsUI(selectedDateStr, bookedData) {
     });
 }
 
-// ==========================================
-// 3. SUBMIT BOOKING
-// ==========================================
+// 9. Booking දත්ත Firestore වෙත යැවීම
 bookingForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -227,12 +228,13 @@ bookingForm?.addEventListener('submit', async (e) => {
         btnConfirmBooking.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
         btnConfirmBooking.disabled = true;
 
+        // Double check for double-booking (Conflict check)
         const qCheck = query(collection(db, "bookings"), where("date", "==", selectedDateDB), where("time", "==", selectedTimeSlot));
         const slotSnap = await getDocs(qCheck);
         
         let isSlotTaken = false;
         slotSnap.forEach(doc => {
-            if(doc.data().status !== "Cancelled") isSlotTaken = true;
+            if (doc.data().status !== "Cancelled") isSlotTaken = true;
         });
 
         if (isSlotTaken) {
@@ -256,7 +258,7 @@ bookingForm?.addEventListener('submit', async (e) => {
         await addDoc(collection(db, "bookings"), bookingData); 
         
         alert("🎉 Booking Confirmed Successfully!"); 
-        window.location.href = 'my_bookings.html'; // Booking එක ඉවර වුණාම My Bookings වලට යවමු
+        window.location.href = 'my_bookings.html'; 
 
     } catch (error) {
         alert("Error: " + error.message);
@@ -264,3 +266,7 @@ bookingForm?.addEventListener('submit', async (e) => {
         btnConfirmBooking.disabled = false;
     }
 });
+
+// Helpers
+function formatDateForDB(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function formatDateForUI(d) { return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`; }

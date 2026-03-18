@@ -3,145 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Appointment | Salon Rich</title>
+    <title>My Account | Salon Rich</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
-    
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+
     <style>
-        :root {
-            --gold: #FFD700;
-            --gold-hover: #e6c200;
-            --dark-bg: #0F0F0F;
-            --card-bg: #1A1A1A;
-            --input-bg: #242424;
-            --text-main: #FFFFFF;
-            --text-muted: #A0A0A0;
+        /* 🌟 Premium Page Header */
+        .page-header {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1600&q=80') center/cover;
+            padding: 120px 20px 60px;
+            text-align: center;
+            border-bottom: 1px solid var(--accent-gold);
         }
 
-        /* 🌟 Facebook Style Centered Background 🌟 */
-        body { 
-            margin: 0; 
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-            font-family: 'Poppins', sans-serif; 
-            color: var(--text-main); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            padding: 20px 15px; 
-            box-sizing: border-box;
+        /* 🌟 Professional Dashboard Layout */
+        .dashboard-container { 
+            display: grid; 
+            grid-template-columns: 300px 1fr; 
+            gap: 40px; 
+            margin: 40px auto; 
+            max-width: 1200px;
+            align-items: start; 
         }
-
-        .back-link {
-            position: absolute; top: 20px; left: 20px; color: var(--gold);
-            text-decoration: none; font-size: 14px; display: flex; align-items: center; gap: 5px; transition: 0.3s;
-        }
-        .back-link:hover { transform: translateX(-3px); }
-
-        /* 🌟 Premium Card Layout 🌟 */
-        .booking-card { 
-            background: var(--card-bg); 
-            padding: 35px 30px; 
-            border-radius: 20px; 
-            border: 1px solid rgba(255, 215, 0, 0.1); 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6); 
-            width: 100%; 
-            max-width: 450px; 
-            box-sizing: border-box;
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h1 { font-family: 'Playfair Display', serif; color: var(--gold); margin: 0 0 5px; font-size: 26px; text-align: center;}
-        .subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 25px; text-align: center;}
-
-        .form-group label { display: block; font-size: 13px; color: #ccc; margin-bottom: 10px; font-weight: 500;}
         
-        /* Quick Pills */
-        .quick-pills { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
-        .quick-pills::-webkit-scrollbar { height: 0; }
-        .pill { background: var(--input-bg); color: #fff; padding: 8px 15px; border-radius: 20px; font-size: 12px; cursor: pointer; white-space: nowrap; border: 1px solid transparent; transition: 0.3s; }
-        .pill.active { background: rgba(255, 215, 0, 0.15); border-color: var(--gold); color: var(--gold); font-weight: 600; }
-
-        /* Date Slider */
-        .date-selection-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 15px; }
-        .date-slider { display: flex; gap: 10px; overflow-x: auto; flex-grow: 1; padding-bottom: 5px; scroll-behavior: smooth; }
-        .date-slider::-webkit-scrollbar { height: 0; }
-        .date-card { background: var(--input-bg); min-width: 60px; padding: 10px 5px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.3s; display: flex; flex-direction: column; align-items: center; }
-        .date-card:hover { border-color: rgba(255, 215, 0, 0.5); }
-        .date-card.active { background: var(--gold); color: #000; border-color: var(--gold); transform: translateY(-2px); }
-        .date-card .day { font-size: 11px; font-weight: 500; text-transform: uppercase; }
-        .date-card .date { font-size: 18px; font-weight: 700; margin-top: 2px; }
-
-        .calendar-btn { background: rgba(255, 215, 0, 0.1); border: 1px solid var(--gold); border-radius: 12px; font-size: 18px; cursor: pointer; padding: 12px; transition: 0.3s; color: white;}
-        .calendar-btn:hover { background: var(--gold); color: #000; }
-
-        /* Time Slots */
-        .slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; max-height: 220px; overflow-y: auto; padding-right: 5px; }
-        .slots-grid::-webkit-scrollbar { width: 5px; }
-        .slots-grid::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
-        .slot { background: var(--input-bg); border: 1px solid #333; padding: 10px 5px; text-align: center; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; transition: 0.3s; }
-        .slot.available:hover { border-color: var(--gold); color: var(--gold); }
-        .slot.selected { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 700; transform: scale(1.05); }
-        .slot.booked { opacity: 0.4; cursor: not-allowed; background: #111; border-color: #222; }
-        .slot.past { opacity: 0.2; cursor: not-allowed; }
-
-        .btn-main { width: 100%; padding: 15px; background: var(--gold); color: black; border: none; border-radius: 12px; font-weight: 600; font-size: 15px; cursor: pointer; transition: 0.3s; margin-top: 25px; font-family: 'Poppins', sans-serif; display: flex; justify-content: center; align-items: center; gap: 10px;}
-        .btn-main:hover:not(:disabled) { background: var(--gold-hover); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,215,0,0.2); }
-        .btn-main:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        @media (max-width: 480px) {
-            .booking-card { padding: 25px 20px; }
-            h1 { font-size: 22px; }
+        /* --- Sidebar Styles --- */
+        .profile-sidebar {
+            background: var(--primary-dark); padding: 30px 20px; border-radius: 20px; text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: sticky; top: 100px;
         }
+        .profile-avatar-wrapper { position: relative; width: 120px; height: 120px; margin: 0 auto 20px; }
+        .profile-avatar {
+            width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+            border: 3px solid var(--accent-gold); background: rgba(255, 215, 0, 0.1);
+        }
+        .upload-icon {
+            position: absolute; bottom: 0; right: 5px; background: var(--accent-gold); color: #000;
+            width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: 0.3s;
+        }
+        .upload-icon:hover { transform: scale(1.1); background: #fff; }
+
+        .profile-name { font-size: 24px; color: white; margin-bottom: 5px; font-family: 'Playfair Display', serif; }
+        .profile-email { color: var(--text-gray); font-size: 14px; margin-bottom: 30px; }
+        
+        /* Sidebar Navigation Tabs */
+        .sidebar-menu { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
+        .tab-btn {
+            background: transparent; border: 1px solid rgba(255,255,255,0.1); color: white;
+            padding: 15px 20px; border-radius: 12px; font-size: 15px; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; gap: 15px; text-align: left;
+        }
+        .tab-btn i { font-size: 18px; color: var(--accent-gold); width: 20px; text-align: center; }
+        .tab-btn:hover { background: rgba(255, 215, 0, 0.05); border-color: var(--accent-gold); }
+        .tab-btn.active { background: var(--accent-gold); color: #000; font-weight: bold; border-color: var(--accent-gold); }
+        .tab-btn.active i { color: #000; }
+
+        .btn-logout-pro {
+            background: transparent; border: 1px solid #f44336; color: #f44336;
+            padding: 12px 20px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold;
+            cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-logout-pro:hover { background: #f44336; color: white; box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3); }
+
+        /* --- Main Content Area --- */
+        .dashboard-main {
+            background: var(--secondary-dark); padding: 40px; border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.1); min-height: 500px;
+        }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .section-title { color: var(--accent-gold); margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 15px; font-family: 'Playfair Display', serif; }
+
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; color: #ccc; margin-bottom: 8px; font-size: 14px; }
+        .form-input {
+            width: 100%; padding: 15px; background: #111; border: 1px solid #333;
+            border-radius: 8px; color: white; font-size: 15px; transition: 0.3s;
+        }
+        .form-input:focus { border-color: var(--accent-gold); outline: none; box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+
+        /* Booking Cards */
+        .booking-card { background: var(--primary-dark); padding: 20px; margin-bottom: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid var(--accent-gold); display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+        .booking-card:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0,0,0,0.4); }
+        
+        .status-badge { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; text-align: center; }
+        .status-pending { background: #ffaa00; color: #000; }
+        .status-accepted { background: #4CAF50; color: #fff; }
+        .status-completed { background: #2196F3; color: #fff; }
+        .status-cancelled { background: #f44336; color: #fff; }
+        
+        .action-buttons { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .btn-cancel { background: transparent; border: 1px solid #f44336; color: #f44336; padding: 6px 12px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-size: 12px; }
+        .btn-cancel:hover { background: #f44336; color: #fff; }
+        .btn-calendar { background: transparent; border: 1px solid #4CAF50; color: #4CAF50; padding: 6px 12px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-size: 12px; text-decoration: none; }
+        .btn-calendar:hover { background: #4CAF50; color: #fff; }
+
+        /* Responsive Mobile Layout */
+        @media (max-width: 992px) { 
+            .dashboard-container { grid-template-columns: 1fr; gap: 20px; }
+            .profile-sidebar { position: relative; top: 0; padding: 20px; }
+            .sidebar-menu { 
+                flex-direction: row; 
+                overflow-x: auto; 
+                padding-bottom: 10px; 
+                justify-content: flex-start;
+                -webkit-overflow-scrolling: touch;
+            }
+            .tab-btn { flex: 0 0 auto; padding: 12px 15px; font-size: 13px; white-space: nowrap; }
+            .tab-btn span { margin-left: 5px; }
+            .dashboard-main { padding: 25px 20px; }
+        }
+
+        @media (max-width: 600px) {
+            .booking-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .action-buttons { width: 100%; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
+        }
+
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #4CAF50; color: white; padding: 15px 25px; border-radius: 8px; transform: translateY(100px); opacity: 0; transition: 0.4s; z-index: 1000; }
+        .toast.show { transform: translateY(0); opacity: 1; }
     </style>
 </head>
 <body>
 
-    <a href="../index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    <nav class="navbar">
+        <div class="container nav-container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a href="../index.html" class="logo" id="siteLogo">
+                <img src="https://cdn-icons-png.flaticon.com/512/1986/1986347.png" alt="Logo" style="max-height: 50px; width: auto;">
+                <span class="logo-text" style="font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: white; letter-spacing: 2px; text-transform: uppercase;">SALON RICH</span>
+            </a>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="../index.html" style="color: var(--accent-gold); text-decoration: none; font-weight: bold; font-size: 14px;"><i class="fas fa-home"></i> Back to Home</a>
+            </div>
+        </div>
+    </nav>
 
-    <div class="booking-card">
-        <h1 id="modalTitle">Book Appointment</h1>
-        <p class="subtitle" id="serviceSubtitle">Select your preferred date and time</p>
+    <header class="page-header">
+        <div class="container">
+            <h1 style="font-size: clamp(2.2rem, 6vw, 3rem); margin-bottom: 10px; color: var(--accent-gold); font-family: 'Playfair Display', serif;">My Dashboard</h1>
+            <p style="font-size: 1.1rem; color: #ddd;">Hello, <span id="welcomeName">Valued Client</span>! Manage your beauty journey here.</p>
+        </div>
+    </header>
 
-        <form id="bookingForm">
-            <input type="hidden" id="selectedService">
+    <section class="section container">
+        <div class="dashboard-container">
             
-            <div class="form-group">
-                <label>Select Date:</label>
-                <div class="quick-pills">
-                    <div class="pill active" id="pillToday">Today</div>
-                    <div class="pill" id="pillTomorrow">Tomorrow</div>
-                    <div class="pill" id="pillWeekend">This Weekend</div>
+            <div class="profile-sidebar">
+                <div class="profile-avatar-wrapper">
+                    <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" id="displayUserAvatar" class="profile-avatar" alt="User Avatar">
+                    <input type="file" id="uploadAvatarInput" style="display: none;" accept="image/png, image/jpeg">
+                    <div class="upload-icon" onclick="document.getElementById('uploadAvatarInput').click();">
+                        <i class="fas fa-camera"></i>
+                    </div>
                 </div>
-                <div class="date-selection-wrapper">
-                    <div class="date-slider" id="dateSlider"></div>
-                    <button type="button" class="calendar-btn" id="btnOpenCalendar" title="Pick another date"><i class="far fa-calendar-alt"></i></button>
-                    <input type="text" id="hiddenFlatpickr" style="display: none;"> 
+                
+                <h2 class="profile-name" id="displayUserName">Loading...</h2>
+                <p class="profile-email" id="displayUserEmail">Please wait...</p>
+                
+                <div class="sidebar-menu">
+                    <button class="tab-btn active" onclick="switchTab('appointments', event)">
+                        <i class="fas fa-calendar-check"></i> <span>Appointments</span>
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('editProfile', event)">
+                        <i class="fas fa-user-edit"></i> <span>Edit Profile</span>
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('settings', event)">
+                        <i class="fas fa-lock"></i> <span>Security</span>
+                    </button>
                 </div>
+
+                <button id="profileLogoutBtn" class="btn-logout-pro">
+                    <i class="fas fa-sign-out-alt"></i> Log Out
+                </button>
             </div>
 
-            <div class="form-group" style="margin-top: 25px;">
-                <label>Select Time Slot:</label>
-                <div id="timeSlotsContainer" class="slots-grid">
-                    <p style="color: var(--text-muted); font-size: 13px; grid-column: 1 / -1; text-align: center;">Loading premium slots...</p>
+            <div class="dashboard-main">
+                
+                <div id="tab-appointments" class="tab-content active">
+                    <h2 class="section-title"><i class="fas fa-calendar-alt"></i> My Appointments</h2>
+                    
+                    <div id="countdownCard" class="countdown-card" style="background: linear-gradient(135deg, #111, #1a1a1a); padding: 25px; border-radius: 15px; border: 1px solid var(--accent-gold); text-align: center; margin-bottom: 30px; display: none;">
+                        <h3 style="margin: 0; color: #fff; font-size: 12px; text-transform: uppercase;">Next Appointment In:</h3>
+                        <div id="countdownTimer" style="font-size: 32px; color: var(--accent-gold); font-weight: bold; margin: 10px 0;">00d 00h 00m</div>
+                        <p id="countdownService" style="margin: 0; color: var(--text-gray); font-size: 14px;"></p>
+                    </div>
+
+                    <div id="bookingsList">
+                        <p style="text-align: center; color: var(--text-gray);">Checking your bookings...</p>
+                    </div>
+                    
+                    <div style="margin-top: 30px; text-align: center;">
+                        <a href="services.html" class="btn-primary" style="padding: 12px 25px; font-size: 14px; border-radius: 8px;">Book New Appointment</a>
+                    </div>
                 </div>
+
+                <div id="tab-editProfile" class="tab-content">
+                    <h2 class="section-title"><i class="fas fa-user-edit"></i> Personal Information</h2>
+                    <form id="editProfileForm">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="editName" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="editPhone" class="form-input" placeholder="+94 7X XXX XXXX">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="editEmail" class="form-input" disabled style="opacity: 0.5;">
+                        </div>
+                        <button type="submit" id="btnSaveProfile" class="btn-primary" style="width: 100%; padding: 15px; border-radius: 8px;">
+                            Save Changes
+                        </button>
+                    </form>
+                </div>
+
+                <div id="tab-settings" class="tab-content">
+                    <h2 class="section-title"><i class="fas fa-lock"></i> Change Password</h2>
+                    <form id="changePasswordForm">
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" id="newPassword" class="form-input" required minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" id="confirmPassword" class="form-input" required>
+                        </div>
+                        <button type="submit" id="btnChangePassword" class="btn-primary" style="width: 100%; padding: 15px; border-radius: 8px; background: transparent; border: 1px solid var(--accent-gold);">
+                            Update Password
+                        </button>
+                    </form>
+                </div>
+
             </div>
+        </div>
+    </section>
 
-            <button type="submit" id="btnConfirmBooking" class="btn-main" disabled>
-                Select a Time Slot
-            </button>
-        </form>
-    </div>
+    <div id="toastMessage" class="toast">Action successful!</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script type="module" src="../js/booking_time.js"></script>
+    <script type="module">
+        import { auth, db } from '../js/firebase-config.js';
+        import { onAuthStateChanged, signOut, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { collection, query, where, onSnapshot, doc, updateDoc, setDoc, getDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const bookingsListEl = document.getElementById('bookingsList');
+        const countdownCard = document.getElementById('countdownCard');
+        const countdownTimer = document.getElementById('countdownTimer');
+        const countdownService = document.getElementById('countdownService');
+        
+        let countdownInterval;
+        let currentUser = null;
+
+        // --- UI Logic: Tab Switching ---
+        window.switchTab = function(tabId, event) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toastMessage');
+            toast.innerText = message;
+            toast.style.background = isError ? '#f44336' : '#4CAF50';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // --- Auth State ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('displayUserName').innerText = user.displayName || 'Valued Client';
+                document.getElementById('welcomeName').innerText = user.displayName ? user.displayName.split(' ')[0] : 'Client';
+                document.getElementById('displayUserEmail').innerText = user.email;
+                document.getElementById('editName').value = user.displayName || '';
+                document.getElementById('editEmail').value = user.email;
+
+                // Firestore extra data
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    if (data.phone) document.getElementById('editPhone').value = data.phone;
+                    if (data.avatarUrl) document.getElementById('displayUserAvatar').src = data.avatarUrl;
+                }
+
+                fetchUserBookings(user.email);
+            } else {
+                window.location.replace('login.html');
+            }
+        });
+
+        // --- Avatar Upload (Base64) ---
+        document.getElementById('uploadAvatarInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 1024 * 1024) return showToast("Image too large (Max 1MB)", true);
+
+            const reader = new FileReader();
+            reader.onload = async function(event) {
+                const base64 = event.target.result;
+                document.getElementById('displayUserAvatar').src = base64;
+                try {
+                    await setDoc(doc(db, "users", currentUser.uid), { avatarUrl: base64 }, { merge: true });
+                    showToast("Profile picture updated!");
+                } catch (e) { showToast("Upload failed", true); }
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // --- Edit Profile ---
+        document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSaveProfile');
+            const newName = document.getElementById('editName').value;
+            const newPhone = document.getElementById('editPhone').value;
+
+            btn.disabled = true;
+            try {
+                await updateProfile(currentUser, { displayName: newName });
+                await setDoc(doc(db, "users", currentUser.uid), { name: newName, phone: newPhone }, { merge: true });
+                showToast("Profile updated!");
+            } catch (error) { showToast(error.message, true); }
+            btn.disabled = false;
+        });
+
+        // --- Booking Fetch & Countdown ---
+        function fetchUserBookings(email) {
+            const q = query(collection(db, "bookings"), where("userEmail", "==", email));
+            onSnapshot(q, (snapshot) => {
+                let bookings = [];
+                let closestBooking = null;
+
+                if (snapshot.empty) {
+                    bookingsListEl.innerHTML = '<p style="text-align: center; color: var(--text-gray);">No appointments found.</p>';
+                    countdownCard.style.display = 'none';
+                    return;
+                }
+
+                snapshot.forEach(doc => bookings.push({ id: doc.id, ...doc.data() }));
+                bookings.sort((a, b) => new Date(`${b.date}T${b.time}`) - new Date(`${a.date}T${a.time}`));
+
+                let html = "";
+                bookings.forEach(b => {
+                    const status = b.status || 'Pending';
+                    const statusClass = `status-${status.toLowerCase()}`;
+                    const canCancel = (status === 'Pending' || status === 'Accepted');
+                    
+                    html += `
+                        <div class="booking-card">
+                            <div>
+                                <h4 style="margin: 0; color: var(--accent-gold);">${b.service}</h4>
+                                <p style="margin: 5px 0 0; color: #aaa; font-size: 13px;">📅 ${b.displayDate || b.date} | ⏰ ${b.time}</p>
+                            </div>
+                            <div class="action-buttons">
+                                <span class="status-badge ${statusClass}">${status}</span>
+                                ${canCancel ? `<button class="btn-cancel" onclick="window.cancelBooking('${b.id}', '${b.date}', '${b.time}')">Cancel</button>` : ''}
+                            </div>
+                        </div>
+                    `;
+
+                    // Check for countdown
+                    const bTime = new Date(`${b.date}T${b.time}`);
+                    if (status === 'Accepted' && bTime > new Date()) {
+                        if (!closestBooking || bTime < new Date(`${closestBooking.date}T${closestBooking.time}`)) {
+                            closestBooking = b;
+                        }
+                    }
+                });
+                bookingsListEl.innerHTML = html;
+
+                if (closestBooking) {
+                    startCountdown(new Date(`${closestBooking.date}T${closestBooking.time}`), closestBooking.service);
+                } else {
+                    countdownCard.style.display = 'none';
+                }
+            });
+        }
+
+        function startCountdown(target, service) {
+            countdownCard.style.display = 'block';
+            countdownService.innerText = service;
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                const diff = target - new Date();
+                if (diff <= 0) {
+                    countdownTimer.innerText = "Time to Style! ✨";
+                    clearInterval(countdownInterval);
+                    return;
+                }
+                const d = Math.floor(diff / 86400000);
+                const h = Math.floor((diff % 86400000) / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                countdownTimer.innerText = `${d}d ${h}h ${m}m`;
+            }, 60000);
+        }
+
+        window.cancelBooking = async (id, date, time) => {
+            if (confirm("Cancel this appointment?")) {
+                try {
+                    await updateDoc(doc(db, "bookings", id), { status: "Cancelled" });
+                    showToast("Appointment cancelled.");
+                } catch (e) { showToast("Error cancelling", true); }
+            }
+        };
+
+        document.getElementById('profileLogoutBtn').addEventListener('click', () => {
+            signOut(auth).then(() => window.location.replace('../index.html'));
+        });
+    </script>
 </body>
 </html>
