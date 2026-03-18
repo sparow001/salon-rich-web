@@ -168,54 +168,57 @@ a:active, button:active { transform: scale(0.95); }
 .text-center { text-align: center; }
 .mt-20 { margin-top: 20px; }
 
-/* 🌟 100% PERFECT MODAL UI (PC, Tablet, Mobile Fixed) 🌟 */
+/* 🌟 THE ULTIMATE BULLETPROOF MODAL FIX 🌟 */
 #bookingModal.modal {
-    display: none; /* JS එකෙන් මේක Flex කරයි */
+    display: none; /* JS මඟින් මෙය flex බවට පත් කරයි */
     position: fixed !important; 
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important; /* 100vh වෙනුවට 100% දීමෙන් Mobile Address bar අවුල හැදේ */
+    inset: 0 !important; /* Top, Right, Bottom, Left සියල්ල 0 කර තිරය පුරා අගුළු ලයි */
+    width: 100vw !important;
+    height: 100vh !important; 
     background-color: rgba(0, 0, 0, 0.85) !important; 
     backdrop-filter: blur(8px) !important; 
-    z-index: 99999 !important; 
+    z-index: 999999 !important; 
     
-    /* 🎯 නියම Flexbox Centering (Margin අවශ්‍ය නැත) */
+    /* Box එක හරියටම මැද තබා ගැනීම */
     align-items: center !important; 
     justify-content: center !important;
-    padding: 0 !important; /* Flexbox වලදී පිටත padding අවශ්‍ය නැත */
+    padding: 20px !important;
+    box-sizing: border-box !important;
 }
 
 #bookingModal .modal-content {
     background: linear-gradient(145deg, #1A1A1A, #0F0F0F) !important;
-    padding: 30px !important; 
+    padding: 25px 25px 35px 25px !important; 
     border-radius: 20px !important; 
     border: 1px solid rgba(255, 215, 0, 0.3) !important;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8) !important;
     
-    /* 📱 Size & Spacing */
-    width: 90% !important; /* Mobile එකේදී දෙපැත්තෙන් ඉඩ ඉතුරු කරයි */
-    max-width: 450px !important; 
-    max-height: 85vh !important; 
+    /* 🎯 Box එකේ ප්‍රමාණය පාලනය කිරීම (තිරයෙන් පිටතට යාම වළක්වයි) */
+    width: 100% !important; 
+    max-width: 420px !important; 
+    max-height: 85vh !important; /* තිරයෙන් 85% කට වඩා උස වැඩි වීමට නොදෙයි */
+    
+    /* Box එක ඇතුළේ Scrollbar එක නිර්මාණය කිරීම */
     overflow-y: auto !important; 
+    overflow-x: hidden !important;
     
-    /* 🚨 පරණ වැරදි ඔක්කොම නිවැරදි කිරීම */
+    /* අමතර බලපෑම් ඉවත් කිරීම */
     position: relative !important;
-    margin: 0 !important; /* Margin අනිවාර්යයෙන්ම 0 විය යුතුය */
+    margin: 0 !important; 
     top: auto !important;
     bottom: auto !important;
-    transform: none !important; /* පරණ Animations යටපත් කිරීම */
+    left: auto !important;
+    right: auto !important;
+    transform: none !important; 
     
-    box-shadow: 0 25px 50px rgba(0,0,0,0.9) !important;
     box-sizing: border-box !important;
-    
-    /* අලුත් Smooth Entrance එක */
-    animation: modalFadeIn 0.3s ease-out forwards !important;
+    animation: modalPopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
 }
 
-/* Modal Pop Animation */
-@keyframes modalFadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+/* 🌟 ලස්සනට මැදින් මතුවෙන Animation එක */
+@keyframes modalPopIn {
+    0% { opacity: 0; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
 }
 
 /* Scrollbar Design */
@@ -225,9 +228,11 @@ a:active, button:active { transform: scale(0.95); }
 
 /* Mobile View Adjustments */
 @media (max-width: 480px) {
+    #bookingModal.modal {
+        padding: 15px !important;
+    }
     #bookingModal .modal-content {
-        padding: 20px 15px !important;
-        max-height: 88vh !important;
-        width: 95% !important;
+        padding: 20px 15px 30px 15px !important;
+        max-height: 90vh !important;
     }
 }
