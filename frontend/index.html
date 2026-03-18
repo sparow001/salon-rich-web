@@ -498,21 +498,21 @@
     </script>
 
     <script>
+        // 1. Hamburger Menu Logic
         const menuToggle = document.getElementById('menuToggle');
         const navMenu = document.getElementById('navMenu');
         const navLinks = document.querySelectorAll('.nav-links a, .nav-actions a, .nav-actions button'); 
 
-        menuToggle.addEventListener('click', () => { navMenu.classList.toggle('active'); });
+        menuToggle?.addEventListener('click', () => { navMenu.classList.toggle('active'); });
         navLinks.forEach(link => { link.addEventListener('click', () => { navMenu.classList.remove('active'); }); });
 
+        // 2. Hero Slideshow Logic
         let currentSlide = 0;
         let slideInterval;
-        
         window.initSlideshow = function() {
             clearInterval(slideInterval);
             const slides = document.querySelectorAll('.slide');
             if(slides.length <= 1) return; 
-            
             slideInterval = setInterval(() => {
                 slides[currentSlide].classList.remove('active');
                 currentSlide = (currentSlide + 1) % slides.length;
@@ -521,11 +521,25 @@
         };
         window.initSlideshow();
 
-        // Global Book Now Button Logic (පහළ සර්විස් කාඩ් වලට පමණයි)
+        // 🚨 3. Main Hero Button -> මේක එබුවම Services පේජ් එකට යයි
+        document.getElementById('btnHeroBook')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'pages/services.html';
+        });
+
+        // 🚨 4. Service Cards වල 'Book Now' බොත්තම් -> අලුත් Booking Page එකට යවයි
         document.querySelectorAll('.btn-book-global').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const dummyEvent = { preventDefault: () => {}, target: document.querySelector('.service-card .btn-primary') };
-                document.dispatchEvent(new CustomEvent('click', { detail: dummyEvent }));
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                let serviceName = "General Booking";
+                const card = btn.closest('.service-card');
+                if (card) {
+                    const titleEl = card.querySelector('h3');
+                    if (titleEl) serviceName = titleEl.innerText;
+                }
+                
+                // අලුත් booking_time.html පිටුවට ලින්ක් කිරීම
+                window.location.href = `pages/booking_time.html?service=${encodeURIComponent(serviceName)}`;
             });
         });
     </script>
