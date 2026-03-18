@@ -147,7 +147,7 @@
 
         /* 🌟 Perfect Centered Professional Modal (PC, Tablet, Mobile) 🌟 */
         .modal {
-            display: none; /* JS එකෙන් flex කරයි */
+            display: none; 
             position: fixed !important; 
             inset: 0 !important; 
             width: 100% !important; 
@@ -249,7 +249,7 @@
             <p style="font-size: clamp(1rem, 4vw, 1.2rem); color: var(--text-gray); margin-bottom: 35px;">
                 Make your beauty dreams come true. Book your appointment now.
             </p>
-            <button id="btnHeroBook" class="btn-primary btn-book-global" style="padding: 18px 45px; font-size: 16px;" data-i18n="bookNowHero">Book an Appointment</button>
+            <button id="btnHeroBook" class="btn-primary" style="padding: 18px 45px; font-size: 16px;" data-i18n="bookNowHero">Book an Appointment</button>
         </div>
     </header>
 
@@ -428,7 +428,6 @@
             window.location.reload();
         });
 
-        // 🚨 Fetch Dynamic Home Media (Logo & Slides)
         async function loadDynamicHomeMedia() {
             try {
                 const docRef = doc(db, "site_settings", "home_page");
@@ -465,7 +464,6 @@
         }
         loadDynamicHomeMedia();
 
-        // 🚨 Latest 3 Gallery Images Fetch Logic
         async function loadLatestGallery() {
             const container = document.getElementById('homeGalleryContainer');
             try {
@@ -489,8 +487,7 @@
         }
         loadLatestGallery();
 
-        // 🚨 Hero Book Button Redirect Logic (COMMENTED OUT TO ALLOW POPUP)
-        /*
+        // 🚨 Hero Book Button Redirect Logic (නැවත සක්‍රීය කර ඇත)
         document.getElementById('btnHeroBook')?.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -498,11 +495,9 @@
             if(user) { window.location.href = 'pages/services.html'; } 
             else { window.location.href = 'pages/login.html?redirect=services'; }
         });
-        */
     </script>
 
     <script>
-        // Hamburger Menu & Auto-Close Logic
         const menuToggle = document.getElementById('menuToggle');
         const navMenu = document.getElementById('navMenu');
         const navLinks = document.querySelectorAll('.nav-links a, .nav-actions a, .nav-actions button'); 
@@ -510,7 +505,6 @@
         menuToggle.addEventListener('click', () => { navMenu.classList.toggle('active'); });
         navLinks.forEach(link => { link.addEventListener('click', () => { navMenu.classList.remove('active'); }); });
 
-        // Dynamic Hero Slideshow Logic
         let currentSlide = 0;
         let slideInterval;
         
@@ -527,7 +521,7 @@
         };
         window.initSlideshow();
 
-        // Global Book Now Button Logic
+        // Global Book Now Button Logic (පහළ සර්විස් කාඩ් වලට පමණයි)
         document.querySelectorAll('.btn-book-global').forEach(btn => {
             btn.addEventListener('click', () => {
                 const dummyEvent = { preventDefault: () => {}, target: document.querySelector('.service-card .btn-primary') };
@@ -536,4 +530,4 @@
         });
     </script>
 </body>
-</html>s
+</html>

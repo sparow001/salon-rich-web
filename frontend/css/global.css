@@ -168,20 +168,6 @@ a:active, button:active { transform: scale(0.95); }
 .text-center { text-align: center; }
 .mt-20 { margin-top: 20px; }
 
-/* 🌟 FINAL PERFECT MODAL UI (PC, Tablet, Mobile) 🌟 */
-#bookingModal.modal {
-    display: none; /* බොත්තම එබුවම JS එකෙන් මේක Flex කරයි */
-    position: fixed !important; 
-    inset: 0 !important; /* top, left, width, height වෙනුවට මේක පාවිච්චි කිරීම වඩාත් නිවැරදියි */
-    background-color: rgba(0, 0, 0, 0.85) !important; 
-    backdrop-filter: blur(10px) !important; 
-    z-index: 99999 !important; 
-    align-items: center !important; 
-    justify-content: center !important;
-    padding: 20px !important;
-    box-sizing: border-box !important;
-}
-
 /* 🌟 100% PERFECT MODAL UI (PC, Tablet, Mobile Fixed) 🌟 */
 #bookingModal.modal {
     display: none; /* JS එකෙන් මේක Flex කරයි */
@@ -197,6 +183,7 @@ a:active, button:active { transform: scale(0.95); }
     /* 🎯 නියම Flexbox Centering (Margin අවශ්‍ය නැත) */
     align-items: center !important; 
     justify-content: center !important;
+    padding: 0 !important; /* Flexbox වලදී පිටත padding අවශ්‍ය නැත */
 }
 
 #bookingModal .modal-content {

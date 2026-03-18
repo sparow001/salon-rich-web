@@ -35,7 +35,6 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-
 // ==========================================
 // 1. SMART DATE SELECTION LOGIC
 // ==========================================
@@ -138,13 +137,13 @@ function formatDateForUI(d) { return `${String(d.getDate()).padStart(2,'0')}/${S
 
 
 // ==========================================
-// 2. MODAL & PRE-LOGIN CHECK LOGIC (FIXED)
+// 2. MODAL & PRE-LOGIN CHECK LOGIC
 // ==========================================
 document.addEventListener('click', async (e) => {
-    // 🚨 Safe check to prevent closest() errors
+    // 🚨 Safe check
     if (!e.target || typeof e.target.closest !== 'function') return;
 
-    // Service Card බොත්තම් සහ Main Book (Global) බොත්තම් දෙකම අල්ලගැනීම
+    // Service Card බොත්තම් සහ Main Book (Global) බොත්තම් අල්ලගැනීම (Hero බොත්තම මඟ හැර ඇත)
     const serviceBtn = e.target.closest('.service-card .btn-primary');
     const globalBtn = e.target.closest('.btn-book-global');
     
@@ -159,7 +158,6 @@ document.addEventListener('click', async (e) => {
             return;
         }
 
-        // Service එකක් තෝරලා නැත්නම් සාමාන්‍ය Booking එකක් ලෙස දැමීම
         let serviceName = "General Booking";
         if (serviceBtn) {
             const card = serviceBtn.closest('.service-card');
@@ -178,21 +176,18 @@ document.addEventListener('click', async (e) => {
         setActivePill('pillToday');
 
         modal.style.display = 'flex'; 
-        // 🚨 1. Mobile App Fix: Disable background scrolling
         document.body.style.overflow = 'hidden'; 
     }
 });
 
 function closeModalAndReset() {
     modal.style.display = 'none';
-    // 🚨 2. Mobile App Fix: Re-enable background scrolling
     document.body.style.overflow = ''; 
     if(realtimeListener) realtimeListener(); 
 }
 
 closeBtn.addEventListener('click', closeModalAndReset);
 
-// Close modal when clicking outside the box
 window.addEventListener('click', (e) => {
     if (e.target === modal) {
         closeModalAndReset();
@@ -326,7 +321,7 @@ bookingForm.addEventListener('submit', async (e) => {
         await addDoc(collection(db, "bookings"), bookingData); 
         
         alert("🎉 Booking Confirmed Successfully!"); 
-        closeModalAndReset(); // Uses the new function to reset overflow
+        closeModalAndReset(); 
 
     } catch (error) {
         alert("Error: " + error.message);
