@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Salon Rich</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/admin.css">
+
+    <style>
+        /* Walk-in Button & Quick Actions */
+        .admin-header-actions {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #111; padding: 20px; border-radius: 12px;
+            margin-bottom: 25px; border-left: 5px solid var(--gold);
+            position: sticky; top: 70px; z-index: 100;
+        }
+        .btn-walk-in-main {
+            background: var(--gold); color: #000; border: none; padding: 12px 25px;
+            font-weight: 800; border-radius: 50px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); display: flex; align-items: center; gap: 10px; transition: 0.3s;
+        }
+        .btn-walk-in-main:hover { transform: scale(1.05); background: #fff; }
+
+        @media (max-width: 768px) {
+            .admin-header-actions { flex-direction: column; gap: 15px; text-align: center; }
+            .btn-walk-in-main { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar" style="position: sticky; top: 0; z-index: 1000; background: var(--secondary-dark); padding: 15px 50px; border-bottom: 1px solid var(--gold); display: flex; justify-content: space-between; align-items: center;">
+        <a href="../index.html" class="logo" style="text-decoration: none; color: var(--gold); font-weight: bold; font-size: 20px;">✨ Salon Rich - ADMIN</a>
+        <div class="nav-links" style="display: flex; align-items: center; gap: 20px;">
+            <span id="adminNameDisplay" style="color: var(--gold); font-weight: bold;"></span>
+            <button id="navLogout" class="btn-primary" style="padding: 8px 20px;">Logout</button>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'bookingsTab')"><i class="fas fa-calendar-check"></i> Appointments</button>
+            <button class="tab-btn" onclick="openTab(event, 'mediaTab')"><i class="fas fa-photo-video"></i> Media & Gallery</button>
+            <button class="tab-btn" onclick="openTab(event, 'holidaysTab')"><i class="fas fa-calendar-times"></i> Block Holidays</button>
+        </div>
+
+        <div id="bookingsTab" class="tab-content active">
+            <div class="admin-header-actions">
+                <h3 style="margin: 0; color: #fff;">Manage Bookings</h3>
+                <button class="btn-walk-in-main" id="btnOpenWalkIn">
+                    <i class="fas fa-plus-circle"></i> NEW WALK-IN (CASH)
+                </button>
+            </div>
+
+            <div class="filter-bar">
+                <h4 style="margin: 0; color: var(--gold);">Today's Appointments</h4>
+                <div>
+                    <label style="color: var(--text-gray); font-size: 14px; margin-right: 10px;">Filter by Date:</label>
+                    <input type="date" id="filterDate">
+                    <button class="action-btn" id="btnClearFilter" style="margin-left: 10px;">Show All</button>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer Details</th>
+                            <th>Service</th>
+                            <th>Date & Time</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingsTableBody">
+                        <tr><td colspan="5" style="text-align: center; color: var(--text-gray);">Loading Bookings...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="mediaTab" class="tab-content">
+            
+            <div class="media-section">
+                <h3 class="section-title"><i class="fas fa-home"></i> Section A: Home Page Settings</h3>
+                <p class="section-desc">Manage your main website logo and the 5 hero slideshow images.</p>
+                
+                <div class="media-grid">
+                    <div class="upload-card logo-card">
+                        <h4>Website Logo</h4>
+                        <div class="preview-box" id="logoPreview"></div>
+                        <input type="file" id="logoInput" accept="image/*">
+                        <button class="action-btn" id="btnUpdateLogo" style="width: 100%; margin-top: 15px;">Update Logo</button>
+                    </div>
+
+                    <div class="upload-card">
+                        <h4>Hero Slide 1</h4>
+                        <div class="preview-box" id="slide1Preview"></div>
+                        <input type="file" id="slide1Input" accept="image/*">
+                        <button class="action-btn" id="btnUpdateSlide1" style="width: 100%; margin-top: 15px;">Update Slide 1</button>
+                    </div>
+
+                    <div class="upload-card">
+                        <h4>Hero Slide 2</h4>
+                        <div class="preview-box" id="slide2Preview"></div>
+                        <input type="file" id="slide2Input" accept="image/*">
+                        <button class="action-btn" id="btnUpdateSlide2" style="width: 100%; margin-top: 15px;">Update Slide 2</button>
+                    </div>
+
+                    <div class="upload-card">
+                        <h4>Hero Slide 3</h4>
+                        <div class="preview-box" id="slide3Preview"></div>
+                        <input type="file" id="slide3Input" accept="image/*">
+                        <button class="action-btn" id="btnUpdateSlide3" style="width: 100%; margin-top: 15px;">Update Slide 3</button>
+                    </div>
+
+                    <div class="upload-card">
+                        <h4>Hero Slide 4</h4>
+                        <div class="preview-box" id="slide4Preview"></div>
+                        <input type="file" id="slide4Input" accept="image/*">
+                        <button class="action-btn" id="btnUpdateSlide4" style="width: 100%; margin-top: 15px;">Update Slide 4</button>
+                    </div>
+
+                    <div class="upload-card">
+                        <h4>Hero Slide 5</h4>
+                        <div class="preview-box" id="slide5Preview"></div>
+                        <input type="file" id="slide5Input" accept="image/*">
+                        <button class="action-btn" id="btnUpdateSlide5" style="width: 100%; margin-top: 15px;">Update Slide 5</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="media-section">
+                <h3 class="section-title"><i class="fas fa-file-image"></i> Section B: Page Banners</h3>
+                <p class="section-desc">Update the large images shown on About Us, Contact, and Services pages.</p>
+                
+                <div class="media-grid">
+                    <div class="upload-card">
+                        <h4>About Us Image</h4>
+                        <div class="preview-box" id="aboutPreview"></div>
+                        <input type="file" id="aboutInput" accept="image/*">
+                        <button class="action-btn" id="btnUpdateAbout" style="width: 100%; margin-top: 15px;">Update Image</button>
+                    </div>
+                    <div class="upload-card">
+                        <h4>Contact Us Header</h4>
+                        <div class="preview-box" id="contactPreview"></div>
+                        <input type="file" id="contactInput" accept="image/*">
+                        <button class="action-btn" id="btnUpdateContact" style="width: 100%; margin-top: 15px;">Update Image</button>
+                    </div>
+                    <div class="upload-card">
+                        <h4>Services Header</h4>
+                        <div class="preview-box" id="servicesPreview"></div>
+                        <input type="file" id="servicesInput" accept="image/*">
+                        <button class="action-btn" id="btnUpdateServices" style="width: 100%; margin-top: 15px;">Update Image</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="media-section" style="border-bottom: none;">
+                <h3 class="section-title"><i class="fas fa-images"></i> Section C: Masterpieces Gallery</h3>
+                <p class="section-desc">Upload unlimited photos to your customer gallery. Select an album category before uploading.</p>
+                
+                <div class="admin-form" style="background: #111; padding: 25px; border-radius: 12px; border: 1px dashed var(--gold);">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
+                        <div>
+                            <label>Select Album / Category:</label>
+                            <select id="galleryAlbumSelect" style="margin-bottom: 0;">
+                                <option value="Hair Styling">Hair Styling & Cuts</option>
+                                <option value="Hair Coloring">Hair Coloring</option>
+                                <option value="Bridal & Makeup">Bridal & Makeup</option>
+                                <option value="Grooming">Men's Grooming</option>
+                                <option value="Facial & Skin">Facial & Skin Care</option>
+                                <option value="Nail Art">Nail Art</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Select Photo:</label>
+                            <input type="file" id="galleryImageInput" accept="image/*" style="margin-bottom: 0;">
+                        </div>
+                        <div>
+                            <button id="btnUploadGallery" class="btn-primary" style="width: 100%; padding: 12px;">Add to Gallery</button>
+                        </div>
+                    </div>
+                    <p id="galleryUploadStatus" style="margin-top: 15px; color: #4CAF50; font-weight: bold; text-align: center;"></p>
+                </div>
+
+                <div id="galleryGrid" class="gallery-grid" style="margin-top: 30px;">
+                    <p style="color: var(--text-gray); grid-column: 1 / -1; text-align: center;">Loading Gallery...</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="holidaysTab" class="tab-content">
+            <h3 style="color: #fff; margin-top: 0;">Block Dates (Holidays)</h3>
+            <div class="admin-form">
+                <input type="date" id="holidayDateInput">
+                <button id="btnBlockDate" class="btn-primary" style="width: 100%; margin-top: 10px;">Block This Date</button>
+            </div>
+            <h4 style="color: var(--gold); margin-top: 30px;">Currently Blocked Dates</h4>
+            <ul id="blockedDatesList" style="color: #fff;"></ul>
+        </div>
+    </div>
+
+    <div id="walkInModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="btnCloseWalkIn">&times;</span>
+            <h2 style="color: var(--gold); margin-top: 0;">New Walk-in</h2>
+            <form id="walkInForm" class="admin-form" style="background: transparent; border: none; padding: 0;">
+                <label>Customer Name:</label>
+                <input type="text" id="walkInName" placeholder="Name" required>
+                <label>Phone Number:</label>
+                <input type="text" id="walkInPhone" placeholder="07XXXXXXXX" required>
+                <label>Service (Automatic Slot Blocking):</label>
+                <select id="walkInService">
+                    <option value="Hair Styling" data-mins="40">Hair Styling (40 mins)</option>
+                    <option value="Beard Trimming" data-mins="20">Beard Trimming (20 mins)</option>
+                    <option value="Hair Coloring" data-mins="90">Hair Coloring (90 mins)</option>
+                    <option value="Facial Treatment" data-mins="60">Facial Treatment (60 mins)</option>
+                </select>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 20px; padding: 15px;">Save & Block Slots</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabId) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) { tabcontent[i].classList.remove("active"); }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) { tablinks[i].classList.remove("active"); }
+            document.getElementById(tabId).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+    
+    <script type="module" src="../js/admin.js"></script>
+</body>
+</html>
