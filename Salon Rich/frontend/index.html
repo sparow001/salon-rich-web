@@ -11,145 +11,6 @@
     
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/home.css">
-
-    <style>
-        /* --- Immediate Hero UI Fixes --- */
-        .hero { 
-            position: relative; 
-            height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden; 
-            text-align: center;
-        }
-        .hero-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-        .slide { 
-            position: absolute; 
-            top: 0; left: 0; width: 100%; height: 100%; 
-            background-size: cover; 
-            background-position: center; 
-            opacity: 0; 
-            transition: opacity 1.5s ease-in-out; 
-        }
-        .slide::after { 
-            content: ''; 
-            position: absolute; 
-            top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.6); 
-        }
-        .slide.active { opacity: 1; }
-        .hero-content { z-index: 10; padding: 0 20px; max-width: 900px; }
-
-        /* 🚨 Navbar Layout Fixes (Professional Minimalist Look) 🚨 */
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            flex: 1;
-        }
-        .logo img {
-            max-height: 50px;
-            width: auto;
-            border-radius: 0;
-            border: none;
-            object-fit: contain;
-        }
-        .logo-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 22px;
-            font-weight: 700;
-            color: white;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-        .nav-menu {
-            display: flex;
-            align-items: center;
-            justify-content: center; 
-            flex: 2;
-        }
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end; 
-            gap: 20px;
-            flex: 1;
-        }
-        /* 🚨 Simple Text Buttons for Login/Logout 🚨 */
-        #navLogin, #navLogout, #navProfile {
-            background: transparent !important;
-            border: none !important;
-            color: white !important;
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0;
-            text-decoration: none;
-        }
-        #navLogin:hover, #navLogout:hover {
-            color: var(--accent-gold) !important;
-        }
-        #navProfile {
-            color: var(--accent-gold) !important;
-        }
-
-        /* 🚨 Mobile Menu Fixes 🚨 */
-        .menu-toggle { position: relative; z-index: 2001; display: none; }
-
-        @media (max-width: 992px) {
-            .nav-actions { display: none; } 
-            .menu-toggle { display: block; background: none; border: none; color: var(--accent-gold); font-size: 24px;}
-            .nav-menu {
-                display: none; 
-                flex-direction: column;
-                position: absolute;
-                top: 70px;
-                left: 0;
-                width: 100%;
-                background: var(--secondary-dark);
-                padding: 30px 0;
-                text-align: center;
-                box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-                z-index: 1000;
-            }
-            .nav-menu.active {
-                display: flex !important; 
-                animation: slideDown 0.3s ease;
-            }
-            .nav-actions {
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                padding: 0 20px;
-                margin-top: 20px;
-                border-top: 1px solid rgba(255,255,255,0.1);
-                padding-top: 20px;
-            }
-        }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .nav-links a.active {
-            color: var(--accent-gold) !important; font-weight: bold; border-bottom: 2px solid var(--accent-gold);
-            padding-bottom: 5px; transition: all 0.3s ease-in-out;
-        }
-    </style>
 </head>
 <body>
 
@@ -312,6 +173,7 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script type="module" src="js/home.js"></script>
 
     <script type="module">
@@ -445,8 +307,6 @@
                     const titleEl = card.querySelector('h3');
                     if (titleEl) serviceName = titleEl.innerText;
                 }
-                
-                // අලුත් booking_time.html පිටුවට ලින්ක් කිරීම
                 window.location.href = `pages/booking_time.html?service=${encodeURIComponent(serviceName)}`;
             });
         });
