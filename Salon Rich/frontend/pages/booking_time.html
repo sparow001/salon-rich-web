@@ -3,128 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Account | Salon Rich</title>
+    <title>Book Appointment | Salon Rich</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+    
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/components.css">
 
     <style>
-        /* 🌟 Premium Page Header */
         .page-header {
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1600&q=80') center/cover;
-            padding: 120px 20px 60px;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1600&q=80') center/cover;
+            padding: 100px 20px 40px;
             text-align: center;
             border-bottom: 1px solid var(--accent-gold);
         }
 
-        /* 🌟 Professional Dashboard Layout */
-        .dashboard-container { 
-            display: grid; 
-            grid-template-columns: 300px 1fr; 
-            gap: 40px; 
-            margin: 40px auto; 
-            max-width: 1200px;
-            align-items: start; 
+        /* 🚀 Stepper */
+        .stepper {
+            display: flex; justify-content: center; align-items: center; max-width: 600px; margin: -20px auto 30px;
+            background: var(--primary-dark); padding: 15px 30px; border-radius: 50px;
+            border: 1px solid rgba(255, 215, 0, 0.3); box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            position: relative; z-index: 10;
         }
+        .step { display: flex; align-items: center; gap: 8px; color: #777; font-size: 14px; font-weight: bold; }
+        .step.active { color: var(--accent-gold); }
+        .step.completed { color: #4CAF50; }
+        .step-divider { flex-grow: 1; height: 2px; background: #333; margin: 0 15px; }
+        .step-divider.completed { background: #4CAF50; }
+
+        .booking-container {
+            max-width: 900px; margin: 20px auto 50px; background: var(--secondary-dark);
+            padding: 40px; border-radius: 20px; border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+
+        .form-group { margin-bottom: 30px; text-align: left; }
+        .form-group label { display: block; color: var(--accent-gold); margin-bottom: 10px; font-size: 16px; font-weight: bold;}
         
-        /* --- Sidebar Styles --- */
-        .profile-sidebar {
-            background: var(--primary-dark); padding: 30px 20px; border-radius: 20px; text-align: center;
-            border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: sticky; top: 100px;
-        }
-        .profile-avatar-wrapper { position: relative; width: 120px; height: 120px; margin: 0 auto 20px; }
-        .profile-avatar {
-            width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
-            border: 3px solid var(--accent-gold); background: rgba(255, 215, 0, 0.1);
-        }
-        .upload-icon {
-            position: absolute; bottom: 0; right: 5px; background: var(--accent-gold); color: #000;
-            width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: 0.3s;
-        }
-        .upload-icon:hover { transform: scale(1.1); background: #fff; }
-
-        .profile-name { font-size: 24px; color: white; margin-bottom: 5px; font-family: 'Playfair Display', serif; }
-        .profile-email { color: var(--text-gray); font-size: 14px; margin-bottom: 30px; }
-        
-        /* Sidebar Navigation Tabs */
-        .sidebar-menu { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
-        .tab-btn {
-            background: transparent; border: 1px solid rgba(255,255,255,0.1); color: white;
-            padding: 15px 20px; border-radius: 12px; font-size: 15px; cursor: pointer; transition: 0.3s;
-            display: flex; align-items: center; gap: 15px; text-align: left;
-        }
-        .tab-btn i { font-size: 18px; color: var(--accent-gold); width: 20px; text-align: center; }
-        .tab-btn:hover { background: rgba(255, 215, 0, 0.05); border-color: var(--accent-gold); }
-        .tab-btn.active { background: var(--accent-gold); color: #000; font-weight: bold; border-color: var(--accent-gold); }
-        .tab-btn.active i { color: #000; }
-
-        .btn-logout-pro {
-            background: transparent; border: 1px solid #f44336; color: #f44336;
-            padding: 12px 20px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold;
-            cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .btn-logout-pro:hover { background: #f44336; color: white; box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3); }
-
-        /* --- Main Content Area --- */
-        .dashboard-main {
-            background: var(--secondary-dark); padding: 40px; border-radius: 20px;
-            border: 1px solid rgba(255, 215, 0, 0.1); min-height: 500px;
-        }
-        .tab-content { display: none; animation: fadeIn 0.4s ease; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .section-title { color: var(--accent-gold); margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 15px; font-family: 'Playfair Display', serif; }
-
-        .form-group { margin-bottom: 20px; text-align: left; }
-        .form-group label { display: block; color: #ccc; margin-bottom: 8px; font-size: 14px; }
-        .form-input {
+        .date-input {
             width: 100%; padding: 15px; background: #111; border: 1px solid #333;
-            border-radius: 8px; color: white; font-size: 15px; transition: 0.3s;
-        }
-        .form-input:focus { border-color: var(--accent-gold); outline: none; box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
-
-        /* Booking Cards */
-        .booking-card { background: var(--primary-dark); padding: 20px; margin-bottom: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid var(--accent-gold); display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
-        .booking-card:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0,0,0,0.4); }
-        
-        .status-badge { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; text-align: center; }
-        .status-pending { background: #ffaa00; color: #000; }
-        .status-accepted { background: #4CAF50; color: #fff; }
-        .status-completed { background: #2196F3; color: #fff; }
-        .status-cancelled { background: #f44336; color: #fff; }
-        
-        .action-buttons { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-        .btn-cancel { background: transparent; border: 1px solid #f44336; color: #f44336; padding: 6px 12px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-size: 12px; }
-        .btn-cancel:hover { background: #f44336; color: #fff; }
-        .btn-calendar { background: transparent; border: 1px solid #4CAF50; color: #4CAF50; padding: 6px 12px; border-radius: 5px; cursor: pointer; transition: 0.3s; font-size: 12px; text-decoration: none; }
-        .btn-calendar:hover { background: #4CAF50; color: #fff; }
-
-        /* Responsive Mobile Layout */
-        @media (max-width: 992px) { 
-            .dashboard-container { grid-template-columns: 1fr; gap: 20px; }
-            .profile-sidebar { position: relative; top: 0; padding: 20px; }
-            .sidebar-menu { 
-                flex-direction: row; 
-                overflow-x: auto; 
-                padding-bottom: 10px; 
-                justify-content: flex-start;
-                -webkit-overflow-scrolling: touch;
-            }
-            .tab-btn { flex: 0 0 auto; padding: 12px 15px; font-size: 13px; white-space: nowrap; }
-            .tab-btn span { margin-left: 5px; }
-            .dashboard-main { padding: 25px 20px; }
+            border-radius: 8px; color: white; font-size: 16px; cursor: pointer; text-align: center;
         }
 
-        @media (max-width: 600px) {
-            .booking-card { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .action-buttons { width: 100%; align-items: stretch; flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
-        }
+        /* Slots Grid & Categories */
+        .time-category { margin-bottom: 30px; }
+        .time-category h3 { font-size: 16px; color: #aaa; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+        .slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
 
-        .toast { position: fixed; bottom: 30px; right: 30px; background: #4CAF50; color: white; padding: 15px 25px; border-radius: 8px; transform: translateY(100px); opacity: 0; transition: 0.4s; z-index: 1000; }
+        .slot-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 12px 5px; border-radius: 10px; font-size: 15px; font-weight: 600; transition: 0.3s;
+        }
+        .slot-main-time { font-size: 16px; }
+        .slot-end-time { font-size: 11px; font-weight: normal; margin-top: 5px; opacity: 0.7; }
+
+        .slot-available { background: transparent; border: 2px solid #4CAF50; color: #4CAF50; cursor: pointer; }
+        .slot-available:hover { background: rgba(76, 175, 80, 0.1); transform: translateY(-3px); }
+        .slot-available.selected { background: #4CAF50; color: #fff; box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4); }
+        .slot-unavailable { background: rgba(244, 67, 54, 0.05); border: 2px solid #f44336; color: #f44336; cursor: not-allowed; opacity: 0.5; }
+
+        /* Confirm Section */
+        .confirm-section {
+            margin-top: 40px; padding-top: 30px; border-top: 1px dashed #444;
+            text-align: center; display: none; 
+            animation: slideUp 0.4s ease forwards;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .selected-summary-box {
+            background: rgba(255, 215, 0, 0.05); border: 1px solid var(--accent-gold);
+            padding: 20px; border-radius: 15px; margin-bottom: 25px;
+        }
+        .summary-text { color: #fff; font-size: 15px; margin-bottom: 5px; }
+        .summary-time { color: var(--accent-gold); font-size: 22px; font-weight: bold; }
+
+        .btn-confirm-booking {
+            background: var(--accent-gold); color: #000; font-weight: bold; padding: 18px 50px;
+            border: none; border-radius: 12px; font-size: 17px; cursor: pointer; transition: 0.3s;
+            width: 100%; max-width: 400px;
+        }
+        .btn-confirm-booking:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2); }
+
+        /* Skeleton Loading */
+        .skeleton-slot {
+            height: 60px; border-radius: 10px; background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+            background-size: 200% 100%; animation: shimmer 1.5s infinite; border: 1px solid #333;
+        }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #4CAF50; color: white; padding: 15px 25px; border-radius: 8px; transform: translateY(100px); opacity: 0; transition: 0.4s; z-index: 3000; }
         .toast.show { transform: translateY(0); opacity: 1; }
     </style>
 </head>
@@ -132,289 +101,235 @@
 
     <nav class="navbar">
         <div class="container nav-container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <a href="../index.html" class="logo" id="siteLogo">
-                <img src="https://cdn-icons-png.flaticon.com/512/1986/1986347.png" alt="Logo" style="max-height: 50px; width: auto;">
-                <span class="logo-text" style="font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: white; letter-spacing: 2px; text-transform: uppercase;">SALON RICH</span>
+            <a href="../index.html" class="logo">
+                <span class="logo-text" style="font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: white; letter-spacing: 2px;">SALON RICH</span>
             </a>
-            <div style="display: flex; align-items: center; gap: 20px;">
-                <a href="../index.html" style="color: var(--accent-gold); text-decoration: none; font-weight: bold; font-size: 14px;"><i class="fas fa-home"></i> Back to Home</a>
-            </div>
+            <a href="services.html" style="color: var(--accent-gold); text-decoration: none; font-size: 14px; font-weight: bold;"><i class="fas fa-arrow-left"></i> Services</a>
         </div>
     </nav>
 
     <header class="page-header">
         <div class="container">
-            <h1 style="font-size: clamp(2.2rem, 6vw, 3rem); margin-bottom: 10px; color: var(--accent-gold); font-family: 'Playfair Display', serif;">My Dashboard</h1>
-            <p style="font-size: 1.1rem; color: #ddd;">Hello, <span id="welcomeName">Valued Client</span>! Manage your beauty journey here.</p>
+            <h1 style="color: var(--accent-gold); font-family: 'Playfair Display', serif;">Select Date & Time</h1>
+            <p style="color: #ddd;">Service: <strong id="displayServiceName" style="color: white;">Premium Salon Service</strong></p>
         </div>
     </header>
 
-    <section class="section container">
-        <div class="dashboard-container">
-            
-            <div class="profile-sidebar">
-                <div class="profile-avatar-wrapper">
-                    <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" id="displayUserAvatar" class="profile-avatar" alt="User Avatar">
-                    <input type="file" id="uploadAvatarInput" style="display: none;" accept="image/png, image/jpeg">
-                    <div class="upload-icon" onclick="document.getElementById('uploadAvatarInput').click();">
-                        <i class="fas fa-camera"></i>
-                    </div>
-                </div>
-                
-                <h2 class="profile-name" id="displayUserName">Loading...</h2>
-                <p class="profile-email" id="displayUserEmail">Please wait...</p>
-                
-                <div class="sidebar-menu">
-                    <button class="tab-btn active" onclick="switchTab('appointments', event)">
-                        <i class="fas fa-calendar-check"></i> <span>Appointments</span>
-                    </button>
-                    <button class="tab-btn" onclick="switchTab('editProfile', event)">
-                        <i class="fas fa-user-edit"></i> <span>Edit Profile</span>
-                    </button>
-                    <button class="tab-btn" onclick="switchTab('settings', event)">
-                        <i class="fas fa-lock"></i> <span>Security</span>
-                    </button>
-                </div>
+    <div class="stepper">
+        <div class="step completed"><i class="fas fa-check-circle"></i> Service</div>
+        <div class="step-divider completed"></div>
+        <div class="step active" id="stepTime"><i class="fas fa-clock"></i> Date & Time</div>
+        <div class="step-divider" id="stepDivider2"></div>
+        <div class="step" id="stepConfirm"><i class="fas fa-flag-checkered"></i> Confirm</div>
+    </div>
 
-                <button id="profileLogoutBtn" class="btn-logout-pro">
-                    <i class="fas fa-sign-out-alt"></i> Log Out
-                </button>
+    <section class="section container">
+        <div class="booking-container">
+            <div class="form-group">
+                <label><i class="fas fa-calendar-alt"></i> 1. Pick a Date</label>
+                <input type="text" id="bookingDate" class="date-input" placeholder="Tap to select your preferred date" required readonly>
             </div>
 
-            <div class="dashboard-main">
+            <div class="form-group">
+                <label><i class="fas fa-clock"></i> 2. Choose a Time Slot</label>
                 
-                <div id="tab-appointments" class="tab-content active">
-                    <h2 class="section-title"><i class="fas fa-calendar-alt"></i> My Appointments</h2>
-                    
-                    <div id="countdownCard" class="countdown-card" style="background: linear-gradient(135deg, #111, #1a1a1a); padding: 25px; border-radius: 15px; border: 1px solid var(--accent-gold); text-align: center; margin-bottom: 30px; display: none;">
-                        <h3 style="margin: 0; color: #fff; font-size: 12px; text-transform: uppercase;">Next Appointment In:</h3>
-                        <div id="countdownTimer" style="font-size: 32px; color: var(--accent-gold); font-weight: bold; margin: 10px 0;">00d 00h 00m</div>
-                        <p id="countdownService" style="margin: 0; color: var(--text-gray); font-size: 14px;"></p>
-                    </div>
-
-                    <div id="bookingsList">
-                        <p style="text-align: center; color: var(--text-gray);">Checking your bookings...</p>
-                    </div>
-                    
-                    <div style="margin-top: 30px; text-align: center;">
-                        <a href="services.html" class="btn-primary" style="padding: 12px 25px; font-size: 14px; border-radius: 8px;">Book New Appointment</a>
-                    </div>
+                <div class="status-legends">
+                    <div class="legend-item"><div class="legend-box box-green"></div> Available</div>
+                    <div class="legend-item"><div class="legend-box box-red"></div> Booked / Passed</div>
                 </div>
 
-                <div id="tab-editProfile" class="tab-content">
-                    <h2 class="section-title"><i class="fas fa-user-edit"></i> Personal Information</h2>
-                    <form id="editProfileForm">
-                        <div class="form-group">
-                            <label>Full Name</label>
-                            <input type="text" id="editName" class="form-input" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Phone Number</label>
-                            <input type="tel" id="editPhone" class="form-input" placeholder="+94 7X XXX XXXX">
-                        </div>
-                        <div class="form-group">
-                            <label>Email Address</label>
-                            <input type="email" id="editEmail" class="form-input" disabled style="opacity: 0.5;">
-                        </div>
-                        <button type="submit" id="btnSaveProfile" class="btn-primary" style="width: 100%; padding: 15px; border-radius: 8px;">
-                            Save Changes
-                        </button>
-                    </form>
+                <div id="mainSlotsContainer">
+                    <p style="color: #777; text-align: center; padding: 20px 0;"><i class="fas fa-calendar-day"></i> Please select a date first.</p>
                 </div>
+            </div>
 
-                <div id="tab-settings" class="tab-content">
-                    <h2 class="section-title"><i class="fas fa-lock"></i> Change Password</h2>
-                    <form id="changePasswordForm">
-                        <div class="form-group">
-                            <label>New Password</label>
-                            <input type="password" id="newPassword" class="form-input" required minlength="6">
-                        </div>
-                        <div class="form-group">
-                            <label>Confirm Password</label>
-                            <input type="password" id="confirmPassword" class="form-input" required>
-                        </div>
-                        <button type="submit" id="btnChangePassword" class="btn-primary" style="width: 100%; padding: 15px; border-radius: 8px; background: transparent; border: 1px solid var(--accent-gold);">
-                            Update Password
-                        </button>
-                    </form>
+            <div class="confirm-section" id="confirmSection">
+                <div class="selected-summary-box">
+                    <div class="summary-text">Your Selected Appointment:</div>
+                    <div class="summary-time" id="summaryTimeText">--:-- AM</div>
+                    <div style="color: #aaa; font-size: 13px; margin-top: 5px;" id="summaryDateText">YYYY-MM-DD</div>
                 </div>
-
+                <button type="button" id="btnConfirmBooking" class="btn-confirm-booking">Confirm My Appointment <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
     </section>
 
-    <div id="toastMessage" class="toast">Action successful!</div>
+    <div id="toastMessage" class="toast">Booking Successful!</div>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script type="module">
         import { auth, db } from '../js/firebase-config.js';
-        import { onAuthStateChanged, signOut, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { collection, query, where, onSnapshot, doc, updateDoc, setDoc, getDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const bookingsListEl = document.getElementById('bookingsList');
-        const countdownCard = document.getElementById('countdownCard');
-        const countdownTimer = document.getElementById('countdownTimer');
-        const countdownService = document.getElementById('countdownService');
-        
-        let countdownInterval;
         let currentUser = null;
+        let selectedTime = null;
+        let selectedDateGlobal = null;
+        
+        // 🚨 Service Duration: විනාඩි 45 යි
+        const DURATION_MINS = 45; 
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        let serviceName = urlParams.get('service') || "Premium Salon Service";
+        document.getElementById('displayServiceName').innerText = serviceName;
 
-        // --- UI Logic: Tab Switching ---
-        window.switchTab = function(tabId, event) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            
-            document.getElementById(`tab-${tabId}`).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
+        onAuthStateChanged(auth, (user) => {
+            if (user) currentUser = user;
+            else window.location.replace(`login.html?redirect=booking_time.html&service=${encodeURIComponent(serviceName)}`);
+        });
 
-        function showToast(message, isError = false) {
-            const toast = document.getElementById('toastMessage');
-            toast.innerText = message;
-            toast.style.background = isError ? '#f44336' : '#4CAF50';
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
+        const mainSlotsContainer = document.getElementById('mainSlotsContainer');
+        const confirmSection = document.getElementById('confirmSection');
+        const summaryTimeText = document.getElementById('summaryTimeText');
+        const summaryDateText = document.getElementById('summaryDateText');
+        const btnConfirmBooking = document.getElementById('btnConfirmBooking');
 
-        // --- Auth State ---
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('displayUserName').innerText = user.displayName || 'Valued Client';
-                document.getElementById('welcomeName').innerText = user.displayName ? user.displayName.split(' ')[0] : 'Client';
-                document.getElementById('displayUserEmail').innerText = user.email;
-                document.getElementById('editName').value = user.displayName || '';
-                document.getElementById('editEmail').value = user.email;
-
-                // Firestore extra data
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    const data = userDoc.data();
-                    if (data.phone) document.getElementById('editPhone').value = data.phone;
-                    if (data.avatarUrl) document.getElementById('displayUserAvatar').src = data.avatarUrl;
-                }
-
-                fetchUserBookings(user.email);
-            } else {
-                window.location.replace('login.html');
+        flatpickr("#bookingDate", {
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            onChange: function(selectedDates, dateStr) {
+                selectedDateGlobal = dateStr;
+                selectedTime = null;
+                confirmSection.style.display = 'none';
+                fetchBookingsAndGenerateSlots(dateStr); 
             }
         });
 
-        // --- Avatar Upload (Base64) ---
-        document.getElementById('uploadAvatarInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            if (file.size > 1024 * 1024) return showToast("Image too large (Max 1MB)", true);
+        function showSkeletons() {
+            let html = `<div class="time-category"><h3><i class="fas fa-spinner fa-spin"></i> Checking Live Availability...</h3><div class="slots-grid">`;
+            for(let i=0; i<8; i++) { html += `<div class="skeleton-slot"></div>`; }
+            html += `</div></div>`;
+            mainSlotsContainer.innerHTML = html;
+        }
 
-            const reader = new FileReader();
-            reader.onload = async function(event) {
-                const base64 = event.target.result;
-                document.getElementById('displayUserAvatar').src = base64;
-                try {
-                    await setDoc(doc(db, "users", currentUser.uid), { avatarUrl: base64 }, { merge: true });
-                    showToast("Profile picture updated!");
-                } catch (e) { showToast("Upload failed", true); }
-            };
-            reader.readAsDataURL(file);
-        });
+        // 🚀 Smart Helpers: Time (09:00 AM) විනාඩි වලට හරවන එක
+        function timeToMins(timeStr) {
+            const [time, period] = timeStr.split(' ');
+            let [h, m] = time.split(':').map(Number);
+            if (period === 'PM' && h !== 12) h += 12;
+            if (period === 'AM' && h === 12) h = 0;
+            return h * 60 + m;
+        }
 
-        // --- Edit Profile ---
-        document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnSaveProfile');
-            const newName = document.getElementById('editName').value;
-            const newPhone = document.getElementById('editPhone').value;
+        // 🚀 Smart Helpers: විනාඩි ආපහු Time Text එකක් කරන එක
+        function formatMinsToTime(totalMins) {
+            let h = Math.floor(totalMins / 60);
+            let m = totalMins % 60;
+            let ampm = h >= 12 ? 'PM' : 'AM';
+            let displayH = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+            return `${displayH.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')} ${ampm}`;
+        }
 
-            btn.disabled = true;
+        async function fetchBookingsAndGenerateSlots(selectedDateStr) {
+            showSkeletons();
             try {
-                await updateProfile(currentUser, { displayName: newName });
-                await setDoc(doc(db, "users", currentUser.uid), { name: newName, phone: newPhone }, { merge: true });
-                showToast("Profile updated!");
-            } catch (error) { showToast(error.message, true); }
-            btn.disabled = false;
-        });
-
-        // --- Booking Fetch & Countdown ---
-        function fetchUserBookings(email) {
-            const q = query(collection(db, "bookings"), where("userEmail", "==", email));
-            onSnapshot(q, (snapshot) => {
-                let bookings = [];
-                let closestBooking = null;
-
-                if (snapshot.empty) {
-                    bookingsListEl.innerHTML = '<p style="text-align: center; color: var(--text-gray);">No appointments found.</p>';
-                    countdownCard.style.display = 'none';
-                    return;
-                }
-
-                snapshot.forEach(doc => bookings.push({ id: doc.id, ...doc.data() }));
-                bookings.sort((a, b) => new Date(`${b.date}T${b.time}`) - new Date(`${a.date}T${a.time}`));
-
-                let html = "";
-                bookings.forEach(b => {
-                    const status = b.status || 'Pending';
-                    const statusClass = `status-${status.toLowerCase()}`;
-                    const canCancel = (status === 'Pending' || status === 'Accepted');
-                    
-                    html += `
-                        <div class="booking-card">
-                            <div>
-                                <h4 style="margin: 0; color: var(--accent-gold);">${b.service}</h4>
-                                <p style="margin: 5px 0 0; color: #aaa; font-size: 13px;">📅 ${b.displayDate || b.date} | ⏰ ${b.time}</p>
-                            </div>
-                            <div class="action-buttons">
-                                <span class="status-badge ${statusClass}">${status}</span>
-                                ${canCancel ? `<button class="btn-cancel" onclick="window.cancelBooking('${b.id}', '${b.date}', '${b.time}')">Cancel</button>` : ''}
-                            </div>
-                        </div>
-                    `;
-
-                    // Check for countdown
-                    const bTime = new Date(`${b.date}T${b.time}`);
-                    if (status === 'Accepted' && bTime > new Date()) {
-                        if (!closestBooking || bTime < new Date(`${closestBooking.date}T${closestBooking.time}`)) {
-                            closestBooking = b;
-                        }
+                const q = query(collection(db, "bookings"), where("date", "==", selectedDateStr));
+                const querySnapshot = await getDocs(q);
+                
+                const bookedIntervals = [];
+                querySnapshot.forEach((doc) => { 
+                    const data = doc.data();
+                    if (data.status !== "Cancelled") {
+                        // DB එකේ තියෙන Book කරපු වෙලාව අරන්, ඒකේ ඉඳන් විනාඩි 45ක් යනකම් Interval එක හදනවා
+                        const startMins = timeToMins(data.time);
+                        bookedIntervals.push({ start: startMins, end: startMins + DURATION_MINS });
                     }
                 });
-                bookingsListEl.innerHTML = html;
 
-                if (closestBooking) {
-                    startCountdown(new Date(`${closestBooking.date}T${closestBooking.time}`), closestBooking.service);
-                } else {
-                    countdownCard.style.display = 'none';
-                }
-            });
+                setTimeout(() => { generateCategorizedSlotsUI(selectedDateStr, bookedIntervals); }, 500);
+            } catch (error) { mainSlotsContainer.innerHTML = '<p style="color: #f44336;">Error loading slots.</p>'; }
         }
 
-        function startCountdown(target, service) {
-            countdownCard.style.display = 'block';
-            countdownService.innerText = service;
-            clearInterval(countdownInterval);
-            countdownInterval = setInterval(() => {
-                const diff = target - new Date();
-                if (diff <= 0) {
-                    countdownTimer.innerText = "Time to Style! ✨";
-                    clearInterval(countdownInterval);
-                    return;
-                }
-                const d = Math.floor(diff / 86400000);
-                const h = Math.floor((diff % 86400000) / 3600000);
-                const m = Math.floor((diff % 3600000) / 60000);
-                countdownTimer.innerText = `${d}d ${h}h ${m}m`;
-            }, 60000);
-        }
+        function generateCategorizedSlotsUI(dateStr, bookedIntervals) {
+            mainSlotsContainer.innerHTML = '';
+            const now = new Date();
+            const isToday = (dateStr === flatpickr.formatDate(now, "Y-m-d"));
 
-        window.cancelBooking = async (id, date, time) => {
-            if (confirm("Cancel this appointment?")) {
-                try {
-                    await updateDoc(doc(db, "bookings", id), { status: "Cancelled" });
-                    showToast("Appointment cancelled.");
-                } catch (e) { showToast("Error cancelling", true); }
+            let htmlMorning = `<div class="time-category"><h3><i class="fas fa-sun" style="color: #FFD700;"></i> Morning</h3><div class="slots-grid">`;
+            let htmlAfternoon = `<div class="time-category"><h3><i class="fas fa-cloud-sun" style="color: #FF8C00;"></i> Afternoon</h3><div class="slots-grid">`;
+            let htmlEvening = `<div class="time-category"><h3><i class="fas fa-moon" style="color: #8A2BE2;"></i> Evening</h3><div class="slots-grid">`;
+
+            // 🚀 උදේ 08:30 සිට රාත්‍රී 09:00 (21:00) දක්වා ලූප් එක
+            for (let h = 8; h <= 21; h++) {
+                for (let m = 0; m < 60; m += 10) { 
+                    if (h === 8 && m < 30) continue; // 08:30 AM ට කලින් එපා
+                    if (h === 21 && m > 0) continue; // හරියටම 09:00 PM ට පස්සේ එපා (Last slot = 09:00 PM)
+                    
+                    let slotStartMins = h * 60 + m;
+                    let slotEndMins = slotStartMins + DURATION_MINS;
+                    
+                    let timeString = formatMinsToTime(slotStartMins);
+                    let endTimeString = `Ends ${formatMinsToTime(slotEndMins)}`;
+
+                    // අද දවසේ පහු වුණ වෙලාවල් Expire කරනවා
+                    let isExpired = false;
+                    if (isToday) {
+                        let nowMins = now.getHours() * 60 + now.getMinutes();
+                        if (slotStartMins <= nowMins) isExpired = true;
+                    }
+
+                    // 🚨 Smart 45-Min Overlap Detection (මේකෙන් තමයි වටේ තියෙන ඒවා Auto Block කරන්නේ)
+                    let isBooked = bookedIntervals.some(interval => {
+                        // මේ Slot එක වෙන කෙනෙක්ගේ 45-min interval එක ඇතුළේ තියෙනවද කියලා බලනවා
+                        return (slotStartMins < interval.end) && (interval.start < slotEndMins);
+                    });
+
+                    let btnClass = (isExpired || isBooked) ? 'slot-unavailable' : 'slot-available';
+                    let clickAttr = (isExpired || isBooked) ? `disabled` : `onclick="window.selectSlot(this, '${timeString}')"`;
+
+                    let btnHTML = `<button type="button" class="slot-btn ${btnClass}" ${clickAttr}><span class="slot-main-time">${timeString}</span><span class="slot-end-time">${endTimeString}</span></button>`;
+                    
+                    // කොටස් 3කට කඩනවා
+                    if(h < 12) htmlMorning += btnHTML; 
+                    else if(h < 16) htmlAfternoon += btnHTML; 
+                    else htmlEvening += btnHTML;
+                }
             }
-        };
+            mainSlotsContainer.innerHTML = htmlMorning + "</div></div>" + htmlAfternoon + "</div></div>" + htmlEvening + "</div></div>";
+        }
 
-        document.getElementById('profileLogoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => window.location.replace('../index.html'));
+        window.selectSlot = function(clickedBtn, timeStr) {
+            document.querySelectorAll('.slot-available').forEach(b => b.classList.remove('selected'));
+            clickedBtn.classList.add('selected');
+            selectedTime = timeStr;
+            
+            summaryTimeText.innerText = timeStr;
+            summaryDateText.innerText = selectedDateGlobal;
+            confirmSection.style.display = 'block';
+            
+            confirmSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        btnConfirmBooking.addEventListener('click', async () => {
+            if (!currentUser || !selectedTime) return;
+            btnConfirmBooking.disabled = true;
+            btnConfirmBooking.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Securing Your Slot...';
+
+            try {
+                await addDoc(collection(db, "bookings"), {
+                    userEmail: currentUser.email,
+                    userName: currentUser.displayName || "Client",
+                    service: serviceName,
+                    date: selectedDateGlobal,
+                    time: selectedTime,
+                    status: "Pending", 
+                    createdAt: new Date()
+                });
+
+                document.getElementById('toastMessage').classList.add('show');
+                
+                document.getElementById('stepTime').classList.remove('active');
+                document.getElementById('stepTime').classList.add('completed');
+                document.getElementById('stepDivider2').classList.add('completed');
+                document.getElementById('stepConfirm').classList.add('active');
+                document.getElementById('stepConfirm').classList.add('completed');
+
+                setTimeout(() => { window.location.href = "my_bookings.html"; }, 2000);
+            } catch (error) {
+                alert("Failed to book. Please try again.");
+                btnConfirmBooking.disabled = false;
+                btnConfirmBooking.innerText = "Confirm My Appointment";
+            }
         });
     </script>
 </body>

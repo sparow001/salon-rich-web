@@ -201,90 +201,73 @@
         </div>
     </footer>
 
-    <div id="bookingModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" id="closeModal">&times;</span>
-            <h2 id="modalTitle" style="margin-top: 0; color: var(--accent-gold); margin-bottom: 25px; font-family: 'Playfair Display', serif;" data-i18n="modalTitle">
-                Book Appointment
-            </h2>
-            
-            <form id="bookingForm">
-                <input type="hidden" id="selectedService">
-                
-                <div class="form-group">
-                    <label data-i18n="selectDate">Select Date (DD/MM/YYYY):</label>
-                    <div class="quick-pills" style="margin-bottom: 15px;">
-                        <div class="pill active" id="pillToday">Today</div>
-                        <div class="pill" id="pillTomorrow">Tomorrow</div>
-                        <div class="pill" id="pillWeekend">This Weekend</div>
-                    </div>
-                    <div class="date-selection-wrapper">
-                        <div class="date-slider" id="dateSlider" style="flex-grow: 1;"></div>
-                        <button type="button" class="calendar-btn" id="btnOpenCalendar" title="Pick another date">📅</button>
-                        <input type="text" id="hiddenFlatpickr" style="display: none;"> 
-                    </div>
-                </div>
-
-                <div class="form-group" style="margin-top: 25px;">
-                    <label data-i18n="selectTime">Select Time Slot:</label>
-                    <div id="timeSlotsContainer" class="slots-grid">
-                        <p style="color: var(--text-gray); font-size: 13px; grid-column: 1 / -1; text-align: center;">Loading premium slots...</p>
-                    </div>
-                </div>
-
-                <button type="submit" id="btnConfirmBooking" class="btn-primary" style="width: 100%; margin-top: 30px; padding: 16px; font-size: 16px; border-radius: 12px;" disabled data-i18n="confirmBookingBtn">
-                    Select a Time Slot
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <script type="module" src="../js/home.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script type="module" src="../js/booking.js?v=3.2"></script>
 
     <script type="module">
         import { auth } from '../js/firebase-config.js';
         import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const navLogin = document.getElementById('navLogin');
-        const navLogout = document.getElementById('navLogout');
         const navProfile = document.getElementById('navProfile');
         const profileNameText = document.getElementById('profileNameText');
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 if(navLogin) navLogin.style.display = 'none';
-                if(navLogout) navLogout.style.display = 'inline-flex';
-                if(navProfile) navProfile.style.display = 'inline-flex';
-                if(profileNameText) profileNameText.innerText = `Hi, ${user.displayName ? user.displayName.split(' ')[0] : 'Customer'}`; 
+                if(navProfile) {
+                    navProfile.style.display = 'inline-flex';
+                    profileNameText.innerText = `Hi, ${user.displayName ? user.displayName.split(' ')[0] : 'Customer'}`;
+                }
             } else {
                 if(navLogin) navLogin.style.display = 'inline-flex';
-                if(navLogout) navLogout.style.display = 'none';
                 if(navProfile) navProfile.style.display = 'none';
             }
-        });
-
-        navLogout?.addEventListener('click', async () => {
-            await signOut(auth);
-            window.location.reload();
         });
     </script>
 
     <script>
-        // Hamburger Menu Logic
+        // --- Hamburger Menu Logic ---
         const menuToggle = document.getElementById('menuToggle');
         const navMenu = document.getElementById('navMenu');
-        const navLinks = document.querySelectorAll('.nav-links a, .nav-actions a, .nav-actions button'); 
+        const navLinks = document.querySelectorAll('.nav-links a, .nav-actions a'); 
 
         menuToggle.addEventListener('click', () => { navMenu.classList.toggle('active'); });
         navLinks.forEach(link => { link.addEventListener('click', () => { navMenu.classList.remove('active'); }); });
 
-        // Global Book Now Button Logic
-        document.querySelectorAll('.btn-book-global').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const dummyEvent = { preventDefault: () => {}, target: document.querySelector('.service-card .btn-primary') };
-                document.dispatchEvent(new CustomEvent('click', { detail: dummyEvent }));
+        // --- Language Dropdown Logic ---
+        const langToggleBtn = document.getElementById('langToggleBtn');
+        const langDropdown = document.getElementById('langDropdown');
+        if(langToggleBtn) {
+            langToggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                langDropdown.style.display = langDropdown.style.display === 'none' ? 'block' : 'none';
+            });
+        }
+        window.onclick = () => { if(langDropdown) langDropdown.style.display = 'none'; };
+
+        // --- 🚨 🚀 Booking Page එකට යවන ලොජික් එක (NEW) 🚨 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // සියලුම 'Book Now' බොත්තම් සඳහා (Service Cards වල ඇති)
+            document.querySelectorAll('.service-card .btn-primary, .btn-book-global').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // බොත්තම තියෙන Card එක අල්ලගන්නවා
+                    const card = e.target.closest('.service-card');
+                    let serviceName = "";
+                    
+                    if(card) {
+                        // Card එකේ තියෙන H3 ටැග් එකෙන් සේවා නම (Service Name) ගන්නවා
+                        const title = card.querySelector('h3');
+                        if(title) serviceName = title.innerText.trim();
+                    }
+
+                    // නමක් තිබුණොත් ඒකත් එක්ක, නැත්නම් නම නැතුව booking_time.html එකට යවනවා
+                    if(serviceName) {
+                        window.location.href = `booking_time.html?service=${encodeURIComponent(serviceName)}`;
+                    } else {
+                        window.location.href = `booking_time.html`;
+                    }
+                });
             });
         });
     </script>

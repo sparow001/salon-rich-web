@@ -1,16 +1,19 @@
 import { auth, db } from './firebase-config.js';
 import { 
-    signInWithRedirect, 
-    getRedirectResult,
+    signInWithPopup, 
     GoogleAuthProvider, 
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, 
-    updateProfile 
+    updateProfile,
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const authForm = document.getElementById('authForm');
 const googleBtn = document.getElementById('googleLoginBtn');
+
+// 🚨 Admin ගේ ඊමේල් ලිපිනය මෙතනින් සකසන්න
+const ADMIN_EMAIL = "tharinduhashan2129@gmail.com";
 
 // Helper: Save User to Firestore
 async function syncUserToFirestore(user, name = null) {
@@ -20,31 +23,29 @@ async function syncUserToFirestore(user, name = null) {
         await setDoc(userRef, {
             name: name || user.displayName || "Valued Client",
             email: user.email,
-            role: 'customer',
+            // Admin කෙනෙක් නම් role එක 'admin' ලෙසත් නැත්නම් 'customer' ලෙසත් සේව් වේ
+            role: user.email === ADMIN_EMAIL ? 'admin' : 'customer', 
             createdAt: serverTimestamp()
         });
     }
 }
 
-// 🌟 Google Redirect එකෙන් ආපසු ආවද කියා පරීක්ෂා කිරීම
-async function checkRedirectResult() {
-    try {
-        const result = await getRedirectResult(auth);
-        if (result && result.user) {
-            // Popup නැතුව ලොග් වුණාම කෙලින්ම Database එකට දාලා Home එකට යවනවා
-            await syncUserToFirestore(result.user);
-            window.location.replace('../index.html');
+// 🌟 1. පරිශීලකයා ලොග් වී ඇත්දැයි නිරන්තරයෙන් පරීක්ෂා කිරීම (Bulletproof Redirect)
+// කෙනෙක් ලොග් වුණ ගමන්ම මේකෙන් ඉබේම Home හෝ Admin පිටුවට යවනවා
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // 🚨 Admin Security Check එක හරහා Redirect කිරීම 🚨
+        if (user.email === ADMIN_EMAIL) {
+            // Admin කෙනෙක් නම් කෙලින්ම Admin Dashboard එකට යවයි
+            window.location.replace('admin_dashboard.html'); 
+        } else {
+            // සාමාන්‍ය පාරිභෝගිකයෙක් නම් Home පිටුවට යවයි
+            window.location.replace('../index.html'); 
         }
-    } catch (error) {
-        console.error("Google Sign-In Error:", error);
-        alert("Error logging in: " + error.message);
     }
-}
+});
 
-// පිටුව ලෝඩ් වෙද්දීම මේක චෙක් කරනවා
-checkRedirectResult();
-
-// 1. Email/Password Auth
+// 2. Email/Password Auth
 authForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('authEmail').value;
@@ -66,18 +67,33 @@ authForm.addEventListener('submit', async (e) => {
         } else {
             await signInWithEmailAndPassword(auth, email, password);
         }
-        window.location.replace('../index.html');
+        // සාර්ථක වුවහොත් උඩ තියෙන onAuthStateChanged එකෙන් ඉබේම Redirect කරයි
     } catch (err) {
-        alert(err.message);
+        alert("Error: " + err.message);
         submitBtn.innerHTML = isSignUpMode ? "Sign Up" : "Login";
         submitBtn.disabled = false;
     }
 });
 
-// 2. Google Login (Popup වෙනුවට Redirect ක්‍රමය)
-googleBtn.addEventListener('click', () => {
+// 3. Google Login (Live Server සඳහා Popup ක්‍රමය)
+googleBtn.addEventListener('click', async () => {
     const provider = new GoogleAuthProvider();
-    googleBtn.innerHTML = '<span class="spinner" style="border-top-color:#000;"></span> Redirecting...';
-    googleBtn.disabled = true;
-    signInWithRedirect(auth, provider);
+    try {
+        googleBtn.innerHTML = '<span class="spinner" style="border-top-color:#000;"></span> Connecting...';
+        googleBtn.disabled = true;
+        
+        // Popup එක හරහා ලොග් වීම
+        const result = await signInWithPopup(auth, provider);
+        
+        // Database එකට දත්ත යැවීම
+        await syncUserToFirestore(result.user);
+        
+        // සාර්ථක වුවහොත් උඩ තියෙන onAuthStateChanged එකෙන් ඉබේම Redirect කරයි
+    } catch (error) {
+        console.error("Google Sign-In Error:", error);
+        alert("Error logging in: " + error.message);
+        // Error එකක් ආවොත් ආපහු බොත්තම පරණ තත්ත්වයට පත් කිරීම
+        googleBtn.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/512/3002/300221.png" width="18" alt="Google"> Google Account';
+        googleBtn.disabled = false;
+    }
 });

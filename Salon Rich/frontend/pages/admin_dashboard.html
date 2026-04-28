@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="../css/admin.css">
 
     <style>
-        /* Walk-in Button & Quick Actions */
         .admin-header-actions {
             display: flex; justify-content: space-between; align-items: center;
             background: #111; padding: 20px; border-radius: 12px;
@@ -24,9 +23,12 @@
         }
         .btn-walk-in-main:hover { transform: scale(1.05); background: #fff; }
 
+        .services-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+
         @media (max-width: 768px) {
             .admin-header-actions { flex-direction: column; gap: 15px; text-align: center; }
             .btn-walk-in-main { width: 100%; justify-content: center; }
+            .services-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -36,18 +38,44 @@
         <a href="../index.html" class="logo" style="text-decoration: none; color: var(--gold); font-weight: bold; font-size: 20px;">✨ Salon Rich - ADMIN</a>
         <div class="nav-links" style="display: flex; align-items: center; gap: 20px;">
             <span id="adminNameDisplay" style="color: var(--gold); font-weight: bold;"></span>
-            <button id="navLogout" class="btn-primary" style="padding: 8px 20px;">Logout</button>
+            <button id="navLogout" class="btn-primary" style="padding: 8px 20px; font-size: 13px;">Logout</button>
         </div>
     </nav>
 
     <div class="admin-container">
         <div class="tabs">
             <button class="tab-btn active" onclick="openTab(event, 'bookingsTab')"><i class="fas fa-calendar-check"></i> Appointments</button>
+            <button class="tab-btn" onclick="openTab(event, 'servicesTab')"><i class="fas fa-cut"></i> Manage Services</button>
             <button class="tab-btn" onclick="openTab(event, 'mediaTab')"><i class="fas fa-photo-video"></i> Media & Gallery</button>
             <button class="tab-btn" onclick="openTab(event, 'holidaysTab')"><i class="fas fa-calendar-times"></i> Block Holidays</button>
         </div>
 
         <div id="bookingsTab" class="tab-content active">
+            
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                    <div class="stat-info">
+                        <h3 id="statTodayBookings">0</h3>
+                        <p>Today's Bookings</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-concierge-bell"></i></div>
+                    <div class="stat-info">
+                        <h3 id="statTotalServices">0</h3>
+                        <p>Active Services</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-plane-departure"></i></div>
+                    <div class="stat-info">
+                        <h3 id="statNextHoliday">None</h3>
+                        <p>Next Blocked Date</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="admin-header-actions">
                 <h3 style="margin: 0; color: #fff;">Manage Bookings</h3>
                 <button class="btn-walk-in-main" id="btnOpenWalkIn">
@@ -56,7 +84,10 @@
             </div>
 
             <div class="filter-bar">
-                <h4 style="margin: 0; color: var(--gold);">Today's Appointments</h4>
+                <div style="display: flex; align-items: center; gap: 10px; flex-grow: 1;">
+                    <i class="fas fa-search" style="color: var(--gold);"></i>
+                    <input type="text" id="searchBooking" class="search-box" placeholder="Search Customer Name or Phone...">
+                </div>
                 <div>
                     <label style="color: var(--text-gray); font-size: 14px; margin-right: 10px;">Filter by Date:</label>
                     <input type="date" id="filterDate">
@@ -82,6 +113,60 @@
             </div>
         </div>
 
+        <div id="servicesTab" class="tab-content">
+            <div class="admin-header-actions">
+                <h3 style="margin: 0; color: #fff;">Manage Services & Packages</h3>
+            </div>
+            
+            <div class="services-grid">
+                <div class="admin-form" style="background: #111; padding: 25px; border-radius: 12px; border: 1px solid var(--gold); height: fit-content;">
+                    <h4 style="color: var(--gold); margin-top: 0; margin-bottom: 20px;">Add / Edit Service</h4>
+                    <form id="serviceForm">
+                        <input type="hidden" id="editServiceId">
+                        
+                        <label>Category:</label>
+                        <select id="serviceCategory" required>
+                            <option value="✂️ Hair Care & Styling">Hair Care & Styling</option>
+                            <option value="🧔 Men's Grooming">Men's Grooming</option>
+                            <option value="💆 Facial & Skin Care">Facial & Skin Care</option>
+                            <option value="✨ Special Packages">Special Packages</option>
+                        </select>
+                        
+                        <label>Service Name:</label>
+                        <input type="text" id="serviceName" placeholder="e.g. Keratin Treatment" required>
+                        
+                        <label>Description:</label>
+                        <textarea id="serviceDesc" placeholder="Short description..." required></textarea>
+                        
+                        <label>Price (Rs):</label>
+                        <input type="number" id="servicePrice" placeholder="e.g. 2500" required>
+                        
+                        <label>Duration (Minutes):</label>
+                        <input type="number" id="serviceDuration" placeholder="e.g. 45" required>
+                        
+                        <button type="submit" id="btnSaveService" class="btn-primary" style="width: 100%;">Save Service</button>
+                        <button type="button" id="btnCancelEdit" class="action-btn btn-danger" style="width: 100%; margin-top:10px; display:none;">Cancel Edit</button>
+                    </form>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name & Category</th>
+                                <th>Price</th>
+                                <th>Duration</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="servicesTableBody">
+                            <tr><td colspan="4" style="text-align: center; color: var(--text-gray);">Loading Services...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <div id="mediaTab" class="tab-content">
             
             <div class="media-section">
@@ -93,42 +178,42 @@
                         <h4>Website Logo</h4>
                         <div class="preview-box" id="logoPreview"></div>
                         <input type="file" id="logoInput" accept="image/*">
-                        <button class="action-btn" id="btnUpdateLogo" style="width: 100%; margin-top: 15px;">Update Logo</button>
+                        <button class="btn-primary" id="btnUpdateLogo" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 13px;">Update Logo</button>
                     </div>
 
                     <div class="upload-card">
                         <h4>Hero Slide 1</h4>
                         <div class="preview-box" id="slide1Preview"></div>
                         <input type="file" id="slide1Input" accept="image/*">
-                        <button class="action-btn" id="btnUpdateSlide1" style="width: 100%; margin-top: 15px;">Update Slide 1</button>
+                        <button class="btn-primary" id="btnUpdateSlide1" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 13px;">Update Slide 1</button>
                     </div>
 
                     <div class="upload-card">
                         <h4>Hero Slide 2</h4>
                         <div class="preview-box" id="slide2Preview"></div>
                         <input type="file" id="slide2Input" accept="image/*">
-                        <button class="action-btn" id="btnUpdateSlide2" style="width: 100%; margin-top: 15px;">Update Slide 2</button>
+                        <button class="btn-primary" id="btnUpdateSlide2" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 13px;">Update Slide 2</button>
                     </div>
 
                     <div class="upload-card">
                         <h4>Hero Slide 3</h4>
                         <div class="preview-box" id="slide3Preview"></div>
                         <input type="file" id="slide3Input" accept="image/*">
-                        <button class="action-btn" id="btnUpdateSlide3" style="width: 100%; margin-top: 15px;">Update Slide 3</button>
+                        <button class="btn-primary" id="btnUpdateSlide3" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 13px;">Update Slide 3</button>
                     </div>
 
                     <div class="upload-card">
                         <h4>Hero Slide 4</h4>
                         <div class="preview-box" id="slide4Preview"></div>
                         <input type="file" id="slide4Input" accept="image/*">
-                        <button class="action-btn" id="btnUpdateSlide4" style="width: 100%; margin-top: 15px;">Update Slide 4</button>
+                        <button class="btn-primary" id="btnUpdateSlide4" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 13px;">Update Slide 4</button>
                     </div>
 
                     <div class="upload-card">
                         <h4>Hero Slide 5</h4>
                         <div class="preview-box" id="slide5Preview"></div>
                         <input type="file" id="slide5Input" accept="image/*">
-                        <button class="action-btn" id="btnUpdateSlide5" style="width: 100%; margin-top: 15px;">Update Slide 5</button>
+                        <button class="btn-primary" id="btnUpdateSlide5" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 13px;">Update Slide 5</button>
                     </div>
                 </div>
             </div>
@@ -142,19 +227,19 @@
                         <h4>About Us Image</h4>
                         <div class="preview-box" id="aboutPreview"></div>
                         <input type="file" id="aboutInput" accept="image/*">
-                        <button class="action-btn" id="btnUpdateAbout" style="width: 100%; margin-top: 15px;">Update Image</button>
+                        <button class="btn-primary" id="btnUpdateAbout" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 13px;">Update Image</button>
                     </div>
                     <div class="upload-card">
                         <h4>Contact Us Header</h4>
                         <div class="preview-box" id="contactPreview"></div>
                         <input type="file" id="contactInput" accept="image/*">
-                        <button class="action-btn" id="btnUpdateContact" style="width: 100%; margin-top: 15px;">Update Image</button>
+                        <button class="btn-primary" id="btnUpdateContact" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 13px;">Update Image</button>
                     </div>
                     <div class="upload-card">
                         <h4>Services Header</h4>
                         <div class="preview-box" id="servicesPreview"></div>
                         <input type="file" id="servicesInput" accept="image/*">
-                        <button class="action-btn" id="btnUpdateServices" style="width: 100%; margin-top: 15px;">Update Image</button>
+                        <button class="btn-primary" id="btnUpdateServices" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 13px;">Update Image</button>
                     </div>
                 </div>
             </div>
@@ -198,7 +283,7 @@
             <h3 style="color: #fff; margin-top: 0;">Block Dates (Holidays)</h3>
             <div class="admin-form">
                 <input type="date" id="holidayDateInput">
-                <button id="btnBlockDate" class="btn-primary" style="width: 100%; margin-top: 10px;">Block This Date</button>
+                <button id="btnBlockDate" class="btn-primary" style="width: 100%; margin-top: 10px; max-width: 300px;">Block This Date</button>
             </div>
             <h4 style="color: var(--gold); margin-top: 30px;">Currently Blocked Dates</h4>
             <ul id="blockedDatesList" style="color: #fff;"></ul>
@@ -208,21 +293,49 @@
     <div id="walkInModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" id="btnCloseWalkIn">&times;</span>
-            <h2 style="color: var(--gold); margin-top: 0;">New Walk-in</h2>
+            <h2 style="color: var(--gold); margin-top: 0;">New Walk-in Booking</h2>
             <form id="walkInForm" class="admin-form" style="background: transparent; border: none; padding: 0;">
                 <label>Customer Name:</label>
                 <input type="text" id="walkInName" placeholder="Name" required>
+                
                 <label>Phone Number:</label>
                 <input type="text" id="walkInPhone" placeholder="07XXXXXXXX" required>
-                <label>Service (Automatic Slot Blocking):</label>
+                
+                <label>Service:</label>
                 <select id="walkInService">
                     <option value="Hair Styling" data-mins="40">Hair Styling (40 mins)</option>
                     <option value="Beard Trimming" data-mins="20">Beard Trimming (20 mins)</option>
                     <option value="Hair Coloring" data-mins="90">Hair Coloring (90 mins)</option>
                     <option value="Facial Treatment" data-mins="60">Facial Treatment (60 mins)</option>
                 </select>
-                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 20px; padding: 15px;">Save & Block Slots</button>
+
+                <div style="display: flex; gap: 15px; text-align: left;">
+                    <div style="flex: 1;">
+                        <label>Select Date:</label>
+                        <input type="date" id="walkInDate" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Available Time Slot:</label>
+                        <select id="walkInTime" required>
+                            <option value="">Loading...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 20px; padding: 15px;">Save & Block Slot</button>
             </form>
+        </div>
+    </div>
+
+    <div id="customConfirmModal" class="modal" style="z-index: 3000;">
+        <div class="modal-content" style="max-width: 350px;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: var(--gold); margin-bottom: 15px;"></i>
+            <h3 style="margin: 0 0 10px; color: #fff;">Are you sure?</h3>
+            <p id="confirmMessage" style="color: var(--text-gray); font-size: 14px; margin-bottom: 20px;">Do you really want to do this?</p>
+            <div class="modal-actions">
+                <button id="btnConfirmNo" class="btn-no">Cancel</button>
+                <button id="btnConfirmYes" class="btn-yes">Yes, Proceed</button>
+            </div>
         </div>
     </div>
 
