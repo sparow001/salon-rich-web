@@ -14,7 +14,8 @@
             display: flex; justify-content: space-between; align-items: center;
             background: #111; padding: 20px; border-radius: 12px;
             margin-bottom: 25px; border-left: 5px solid var(--gold);
-            position: sticky; top: 70px; z-index: 100;
+            position: sticky; top: 80px;
+            z-index: 100;
         }
         .btn-walk-in-main {
             background: var(--gold); color: #000; border: none; padding: 12px 25px;
@@ -24,21 +25,21 @@
         .btn-walk-in-main:hover { transform: scale(1.05); background: #fff; }
 
         .services-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
-
-        @media (max-width: 768px) {
-            .admin-header-actions { flex-direction: column; gap: 15px; text-align: center; }
-            .btn-walk-in-main { width: 100%; justify-content: center; }
-            .services-grid { grid-template-columns: 1fr; }
-        }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar" style="position: sticky; top: 0; z-index: 1000; background: var(--secondary-dark); padding: 15px 50px; border-bottom: 1px solid var(--gold); display: flex; justify-content: space-between; align-items: center;">
-        <a href="../index.html" class="logo" style="text-decoration: none; color: var(--gold); font-weight: bold; font-size: 20px;">✨ Salon Rich - ADMIN</a>
+    <nav class="navbar" style="position: sticky; top: 0; z-index: 1000; background: #000000; padding: 12px 30px; border-bottom: 1px solid var(--gold); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+        
+        <a href="../index.html" class="logo" style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+            <img id="navMainLogo" src="" alt="Salon Rich" style="height: 45px; display: none;">
+            <span style="color: var(--gold); font-size: 22px; font-weight: 700; letter-spacing: 1px; font-family: inherit;">Salon Rich</span>
+        </a>
+
         <div class="nav-links" style="display: flex; align-items: center; gap: 20px;">
-            <span id="adminNameDisplay" style="color: var(--gold); font-weight: bold;"></span>
-            <button id="navLogout" class="btn-primary" style="padding: 8px 20px; font-size: 13px;">Logout</button>
+            <span id="adminNameDisplay" class="admin-name-text" style="color: var(--text-gray); font-size: 13px; font-weight: 500;"></span>
+            <button id="navLogout" class="btn-logout-small" style="padding: 7px 15px; font-size: 11px; background: transparent; border: 1px solid var(--gold); color: var(--gold); border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase;">Logout</button>
         </div>
     </nav>
 
@@ -86,12 +87,12 @@
             <div class="filter-bar">
                 <div style="display: flex; align-items: center; gap: 10px; flex-grow: 1;">
                     <i class="fas fa-search" style="color: var(--gold);"></i>
-                    <input type="text" id="searchBooking" class="search-box" placeholder="Search Customer Name or Phone...">
+                    <input type="text" id="searchBooking" class="search-box" placeholder="Search Name or Phone...">
                 </div>
-                <div>
-                    <label style="color: var(--text-gray); font-size: 14px; margin-right: 10px;">Filter by Date:</label>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <label style="color: var(--text-gray); font-size: 14px;">Filter Date:</label>
                     <input type="date" id="filterDate">
-                    <button class="action-btn" id="btnClearFilter" style="margin-left: 10px;">Show All</button>
+                    <button class="action-btn" id="btnClearFilter">Show All</button>
                 </div>
             </div>
             
@@ -309,12 +310,12 @@
                     <option value="Facial Treatment" data-mins="60">Facial Treatment (60 mins)</option>
                 </select>
 
-                <div style="display: flex; gap: 15px; text-align: left;">
-                    <div style="flex: 1;">
+                <div style="display: flex; gap: 15px; text-align: left; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 130px;">
                         <label>Select Date:</label>
                         <input type="date" id="walkInDate" required>
                     </div>
-                    <div style="flex: 1;">
+                    <div style="flex: 1; min-width: 130px;">
                         <label>Available Time Slot:</label>
                         <select id="walkInTime" required>
                             <option value="">Loading...</option>
@@ -328,7 +329,7 @@
     </div>
 
     <div id="customConfirmModal" class="modal" style="z-index: 3000;">
-        <div class="modal-content" style="max-width: 350px;">
+        <div class="modal-content" style="max-width: 350px; text-align: center;">
             <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: var(--gold); margin-bottom: 15px;"></i>
             <h3 style="margin: 0 0 10px; color: #fff;">Are you sure?</h3>
             <p id="confirmMessage" style="color: var(--text-gray); font-size: 14px; margin-bottom: 20px;">Do you really want to do this?</p>

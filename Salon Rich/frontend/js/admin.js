@@ -432,12 +432,38 @@ async function uploadAndSaveMedia(inputId, dbDocId, dbField, btnElement, preview
     }
 }
 
+// --- Load Previews & Fast Logo Sync (Cache System) ---
 async function loadSiteMedia() {
     try {
+        const navMainLogo = document.getElementById('navMainLogo'); // Navbar එකේ ලෝගෝ එක
+        
+        // 🌟 1. Cache එකෙන් ලෝගෝ එක ක්ෂණිකව පෙන්වීම (Delay එක නැති කිරීමට)
+        const cachedLogo = localStorage.getItem('salonRichLogo');
+        if (cachedLogo && navMainLogo) {
+            navMainLogo.src = cachedLogo;
+            navMainLogo.style.display = 'block';
+        }
+
+        // 🌟 2. Firebase එකෙන් අලුත්ම දත්ත ගෙන ඒම
         const homeSnap = await getDoc(doc(db, "site_settings", "home_page"));
         if (homeSnap.exists()) {
             const data = homeSnap.data();
-            if(data.logoUrl) document.getElementById('logoPreview').innerHTML = `<img src="${data.logoUrl}">`;
+            
+            // ලෝගෝ එක අප්ඩේට් කිරීම සහ Cache කිරීම
+            if(data.logoUrl) {
+                // Admin Dashboard එකේ Preview කොටුවට
+                const previewEl = document.getElementById('logoPreview');
+                if(previewEl) previewEl.innerHTML = `<img src="${data.logoUrl}">`;
+                
+                // Navbar එකට (Cache එකට වඩා අලුත් නම් පමණක් මාරු කරයි)
+                if(navMainLogo && navMainLogo.src !== data.logoUrl) {
+                    navMainLogo.src = data.logoUrl;
+                    navMainLogo.style.display = 'block';
+                    localStorage.setItem('salonRichLogo', data.logoUrl); // අලුත් ලෝගෝව බ්‍රවුසරයේ සේව් කරයි
+                }
+            }
+
+            // Slideshow එක ලෝඩ් කිරීම
             if(data.heroSlides) {
                 for(let i=0; i<5; i++) {
                     if(data.heroSlides[i]) {
@@ -448,6 +474,7 @@ async function loadSiteMedia() {
             }
         }
         
+        // Other pages Banners
         const pagesSnap = await getDoc(doc(db, "site_settings", "other_pages"));
         if (pagesSnap.exists()) {
             const pData = pagesSnap.data();

@@ -1,6 +1,6 @@
 /* ==========================================
    SALON RICH - ADMIN DASHBOARD STYLES
-   Tabs, Tables, Badges, Modals, Media & Stats
+   Premium Desktop & Mobile-First UX
    ========================================== */
 
 .admin-container { 
@@ -10,45 +10,48 @@
     padding: 30px; 
     border-radius: 15px; 
     border: 1px solid var(--gold); 
+    transition: all 0.3s ease;
 }
 
-/* --- 1. Top Tabs System --- */
+/* --- 1. Top Tabs System (Modern "Chip" Style) --- */
 .tabs { 
     display: flex; 
-    gap: 10px; 
-    border-bottom: 2px solid #333; 
+    gap: 12px; 
     margin-bottom: 20px; 
-    padding-bottom: 10px; 
-    overflow-x: auto; /* මොබයිල් එකේදී පසෙකට සීරීමට */
+    padding-bottom: 12px; 
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    border-bottom: none; /* පරණ ඉරි කෑල්ල ඉවත් කළා */
 }
 .tabs::-webkit-scrollbar { 
     display: none; 
 }
 
 .tab-btn { 
-    background: transparent; 
-    border: none; 
+    flex: 0 0 auto;
+    background: #1a1a1a; 
+    border: 1px solid #333; 
     color: var(--text-gray); 
-    font-size: 15px; 
+    font-size: 14px; 
     font-weight: bold; 
     cursor: pointer; 
-    padding: 12px 20px; 
-    border-radius: 8px; 
-    transition: 0.3s; 
+    padding: 10px 20px; 
+    border-radius: 50px; /* රවුම් හැඩය (Pill shape) */
+    transition: all 0.3s ease; 
     white-space: nowrap; 
     display: flex; 
     align-items: center; 
-    gap: 8px; 
+    gap: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 .tab-btn.active, .tab-btn:hover { 
-    background: var(--gold); 
-    color: #000; 
+    background: var(--gold) !important; 
+    color: #000 !important; 
+    border-color: var(--gold) !important;
 }
 
-.tab-content { 
-    display: none; 
-}
+.tab-content { display: none; }
 .tab-content.active { 
     display: block; 
     animation: fadeIn 0.4s ease; 
@@ -59,7 +62,7 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- 🌟 NEW: Quick Stats Grid 🌟 --- */
+/* --- 2. Quick Stats Grid --- */
 .stat-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -91,11 +94,7 @@
     justify-content: center;
     font-size: 24px;
 }
-.stat-info h3 { 
-    margin: 0; 
-    color: #fff; 
-    font-size: 24px; 
-}
+.stat-info h3 { margin: 0; color: #fff; font-size: 24px; }
 .stat-info p { 
     margin: 5px 0 0; 
     color: var(--text-gray); 
@@ -104,7 +103,7 @@
     letter-spacing: 1px;
 }
 
-/* --- 2. Tables & Appointments --- */
+/* --- 3. Tables & Filters --- */
 .filter-bar { 
     display: flex; 
     justify-content: space-between; 
@@ -123,15 +122,12 @@
     color: #fff; 
     border-radius: 5px; 
 }
-/* 🌟 NEW: Search Box Width 🌟 */
 .search-box {
     flex-grow: 1;
     max-width: 300px;
 }
 
-.table-responsive { 
-    overflow-x: auto; /* වගුව මොබයිල් එකේ පසෙකට සීරීමට */
-} 
+.table-responsive { overflow-x: auto; } 
 
 table { 
     width: 100%; 
@@ -152,11 +148,9 @@ th {
     text-transform: uppercase; 
     letter-spacing: 1px; 
 }
-tr:hover { 
-    background-color: #151515; 
-}
+tr:hover { background-color: #151515; }
 
-/* --- 3. Status Badges --- */
+/* --- 4. Status Badges --- */
 .status-badge { 
     padding: 6px 12px; 
     border-radius: 5px; 
@@ -171,7 +165,7 @@ tr:hover {
 .status-completed { background-color: #2196F3; color: #fff;} 
 .status-cancelled { background-color: #F44336; color: #fff; } 
 
-/* --- 4. Action Buttons --- */
+/* --- 5. Action Buttons --- */
 .action-btn { 
     background: transparent; 
     border: 1px solid var(--gold); 
@@ -187,16 +181,10 @@ tr:hover {
     background: var(--gold); 
     color: #000; 
 }
-.btn-danger { 
-    border-color: #F44336; 
-    color: #F44336; 
-}
-.btn-danger:hover { 
-    background: #F44336; 
-    color: white; 
-}
+.btn-danger { border-color: #F44336; color: #F44336; }
+.btn-danger:hover { background: #F44336; color: white; }
 
-/* --- 5. Media Management Cards --- */
+/* --- 6. Media Management Cards --- */
 .media-section {
     padding-bottom: 40px;
     margin-bottom: 40px;
@@ -210,11 +198,7 @@ tr:hover {
     align-items: center; 
     gap: 10px; 
 }
-.section-desc { 
-    color: var(--text-gray); 
-    font-size: 14px; 
-    margin-bottom: 25px; 
-}
+.section-desc { color: var(--text-gray); font-size: 14px; margin-bottom: 25px; }
 
 .media-grid { 
     display: grid; 
@@ -235,188 +219,164 @@ tr:hover {
     border-color: var(--gold); 
     box-shadow: 0 5px 15px rgba(255, 215, 0, 0.05);
 }
-.upload-card h4 { 
-    margin: 0 0 15px 0; 
-    color: #fff; 
-    text-align: center; 
-}
-.logo-card { 
-    grid-column: 1 / -1; 
-    max-width: 400px; 
-    margin: 0 auto; 
-    width: 100%; 
-}
+.upload-card h4 { margin: 0 0 15px 0; color: #fff; text-align: center; }
+.logo-card { grid-column: 1 / -1; max-width: 400px; margin: 0 auto; width: 100%; }
 
 .preview-box { 
-    width: 100%; 
-    height: 150px; 
-    background: #080808; 
-    border: 2px dashed #333; 
-    border-radius: 8px; 
-    margin-bottom: 15px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    overflow: hidden; 
-    position: relative;
+    width: 100%; height: 150px; background: #080808; 
+    border: 2px dashed #333; border-radius: 8px; margin-bottom: 15px; 
+    display: flex; align-items: center; justify-content: center; 
+    overflow: hidden; position: relative;
 }
-.preview-box img { 
-    max-width: 100%; 
-    max-height: 100%; 
-    object-fit: cover; 
-}
-.logo-card .preview-box img { 
-    object-fit: contain; 
-}
+.preview-box img { max-width: 100%; max-height: 100%; object-fit: cover; }
+.logo-card .preview-box img { object-fit: contain; }
 
-/* 🌟 Gallery Album Styles 🌟 */
 .gallery-grid {
     display: grid; 
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
     gap: 20px;
 }
 .gallery-card {
-    background: #111; 
-    border: 1px solid #333; 
-    border-radius: 8px; 
-    padding: 10px; 
-    text-align: center; 
-    position: relative;
-    transition: 0.3s;
+    background: #111; border: 1px solid #333; border-radius: 8px; 
+    padding: 10px; text-align: center; position: relative; transition: 0.3s;
 }
-.gallery-card:hover {
-    border-color: var(--gold); 
-    transform: translateY(-5px);
-}
+.gallery-card:hover { border-color: var(--gold); transform: translateY(-5px); }
 .gallery-card img { 
-    width: 100%; 
-    height: 180px; 
-    object-fit: cover; 
-    border-radius: 5px; 
-    margin-bottom: 15px; 
+    width: 100%; height: 180px; object-fit: cover; border-radius: 5px; margin-bottom: 15px; 
 }
 .album-badge {
-    position: absolute; 
-    top: 15px; 
-    left: 15px; 
-    background: rgba(0,0,0,0.8);
-    color: var(--gold); 
-    padding: 5px 10px; 
-    font-size: 11px; 
-    border-radius: 4px; 
-    border: 1px solid var(--gold);
+    position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8);
+    color: var(--gold); padding: 5px 10px; font-size: 11px; 
+    border-radius: 4px; border: 1px solid var(--gold);
 }
 
-/* --- 6. Modal Systems (Walk-in & More) --- */
+/* --- 7. Modal Systems --- */
 .modal { 
-    display: none; 
-    position: fixed; 
-    z-index: 2000; 
-    left: 0; 
-    top: 0; 
-    width: 100%; 
-    height: 100%; 
-    background: rgba(0,0,0,0.85); 
-    justify-content: center; 
-    align-items: center; 
-    backdrop-filter: blur(5px);
+    display: none; position: fixed; z-index: 2000; left: 0; top: 0; 
+    width: 100%; height: 100%; background: rgba(0,0,0,0.85); 
+    justify-content: center; align-items: center; backdrop-filter: blur(5px);
 }
 .modal-content { 
-    background: var(--secondary-dark); 
-    padding: 30px; 
-    border-radius: 15px; 
-    width: 100%; 
-    max-width: 450px; 
-    border: 1px solid var(--gold); 
-    position: relative;
-    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    background: var(--secondary-dark); padding: 30px; border-radius: 15px; 
+    width: 100%; max-width: 450px; border: 1px solid var(--gold); 
+    position: relative; box-shadow: 0 0 30px rgba(0,0,0,0.5);
 }
 .close-btn { 
-    position: absolute; 
-    right: 20px; 
-    top: 15px; 
-    color: var(--gold); 
-    font-size: 24px; 
-    cursor: pointer; 
+    position: absolute; right: 20px; top: 15px; color: var(--gold); 
+    font-size: 24px; cursor: pointer; 
 }
-
-/* 🌟 NEW: Custom Confirm Modal Buttons 🌟 */
 .modal-actions { 
-    display: flex; 
-    gap: 15px; 
-    justify-content: center; 
-    margin-top: 25px; 
+    display: flex; gap: 15px; justify-content: center; margin-top: 25px; 
 }
 .modal-actions button { 
-    flex: 1; 
-    padding: 12px; 
-    font-size: 14px; 
-    font-weight: bold; 
-    border-radius: 8px; 
-    cursor: pointer; 
+    flex: 1; padding: 12px; font-size: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; 
 }
-.btn-yes { 
-    background: #F44336; 
-    color: #fff; 
-    border: none; 
-}
-.btn-no { 
-    background: transparent; 
-    color: #fff; 
-    border: 1px solid #666; 
-}
+.btn-yes { background: #F44336; color: #fff; border: none; }
+.btn-no { background: transparent; color: #fff; border: 1px solid #666; }
 
-/* --- 7. Forms & Inputs --- */
-.admin-form label { 
-    display: block; 
-    margin-bottom: 8px; 
-    color: var(--gold); 
-    font-size: 13px; 
-}
-/* 🌟 UPDATED: Added textarea here so form descriptions look nice 🌟 */
+/* --- 8. Forms & Inputs --- */
+.admin-form label { display: block; margin-bottom: 8px; color: var(--gold); font-size: 13px; }
 .admin-form input, .admin-form select, .admin-form textarea { 
-    width: 100%; 
-    padding: 12px; 
-    margin-bottom: 20px; 
-    background: #080808; 
-    border: 1px solid #333; 
-    color: #fff; 
-    border-radius: 6px; 
+    width: 100%; padding: 12px; margin-bottom: 20px; background: #080808; 
+    border: 1px solid #333; color: #fff; border-radius: 6px; 
 }
 
-/* --- 8. Mobile Adjustments --- */
+/* ==========================================
+   📱 PREMIUM MOBILE-FIRST UX (App-like Design)
+   ========================================== */
 @media (max-width: 768px) {
-    .admin-container { 
-        padding: 15px; 
-        margin: 10px; 
+    /* Edge-to-Edge Container (ඉඩ උපරිම කිරීම) */
+    .admin-container {
+        padding: 15px !important;
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background: #080808 !important;
     }
-    .filter-bar { 
-        flex-direction: column; 
-        align-items: stretch; 
+
+    /* Compact Stat Cards */
+    .stat-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+        margin-bottom: 20px !important;
     }
-    /* 🌟 NEW: Mobile Search Box Fix 🌟 */
-    .search-box { 
-        max-width: 100%; 
+    .stat-card {
+        padding: 12px 15px !important;
+        flex-direction: row !important; /* අයිකනය සහ අකුරු එක පේළියට */
+        gap: 15px !important;
+        border-radius: 10px !important;
+    }
+    .stat-icon {
+        width: 45px !important;
+        height: 45px !important;
+        font-size: 18px !important;
+    }
+    .stat-info h3 { font-size: 20px !important; }
+    .stat-info p { font-size: 11px !important; margin-top: 2px !important; }
+
+    /* Thumb-Friendly UI & Actions */
+    .admin-header-actions {
+        padding: 15px !important;
+        position: static !important;
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        border-left: none !important;
+        border-top: 3px solid var(--gold) !important;
+    }
+    .btn-walk-in-main {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 15px !important;
+        font-size: 14px !important;
+        border-radius: 10px !important;
+    }
+
+    /* Navbar Adjustments */
+    .navbar {
+        flex-direction: row !important;
+        padding: 10px 15px !important;
+        justify-content: space-between !important;
+    }
+    #adminNameDisplay { display: none !important; }
+    #navMainLogo { height: 40px !important; }
+    .nav-links { width: auto !important; }
+
+    /* Forms, Filters & Tables Fixes */
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 10px;
+        padding: 15px !important;
+    }
+    .search-box { width: 100% !important; max-width: 100% !important; }
+    .services-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+    
+    .table-responsive {
+        border-radius: 8px;
+        border: 1px solid #222;
+    }
+    table th, table td {
+        padding: 12px 10px !important;
+        font-size: 12px !important;
     }
     .action-btn { 
         padding: 10px; 
         margin-bottom: 5px; 
         width: 100%; 
-    }
-    .tabs { 
-        padding-bottom: 15px; 
+        display: block;
+        text-align: center;
     }
 }
 
 /* ==========================================
    🌟 FIX: FORCE GOLD THEME FOR ALL BUTTONS 🌟
-   ========================================== */
+   ========================================== */ 
 
-/* ප්‍රධාන බොත්තම් සහ NEW WALK-IN බොත්තම */
 .btn-primary, 
 .btn-walk-in-main {
-    background-color: #FFD700 !important; /* Home Page එකේ කහ/රන්වන් පාට */
-    color: #000000 !important; /* තද කළු අකුරු */
+    background-color: #FFD700 !important; 
+    color: #000000 !important; 
     border: none !important;
     font-weight: 800 !important;
     text-transform: uppercase !important;
@@ -424,48 +384,69 @@ tr:hover {
     transition: all 0.3s ease !important;
 }
 
-/* බොත්තම මතට මවුස් එක ගෙන ගිය විට (Hover) */
 .btn-primary:hover, 
 .btn-walk-in-main:hover {
-    background-color: #ffffff !important; /* සුදු පාට වීම */
+    background-color: #ffffff !important; 
     color: #000000 !important;
     transform: scale(1.05) !important;
     box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3) !important;
 }
 
-/* Nav Bar එකේ ඇති Logout බොත්තම (පැහැදිලිව පෙනීමට) */
 #navLogout {
     background-color: transparent !important;
     border: 2px solid #FFD700 !important;
     color: #FFD700 !important;
 }
-
 #navLogout:hover {
     background-color: #FFD700 !important;
     color: #000000 !important;
 }
 
-/* Table එකේ ඇති Action බොත්තම් (Edit, Call) */
 .action-btn {
     background-color: rgba(255, 215, 0, 0.15) !important;
     color: #FFD700 !important;
     border: 1px solid #FFD700 !important;
     font-weight: bold !important;
 }
-
 .action-btn:hover {
     background-color: #FFD700 !important;
     color: #000000 !important;
 }
 
-/* Delete / Cancel වැනි අනතුරු ඇඟවීමේ බොත්තම් */
 .btn-danger {
     background-color: rgba(244, 67, 54, 0.15) !important;
     color: #F44336 !important;
     border: 1px solid #F44336 !important;
 }
-
 .btn-danger:hover {
     background-color: #F44336 !important;
     color: #ffffff !important;
+}
+
+/* ==========================================
+   📱 MOBILE NAVBAR FIX (Single Row)
+   ========================================== */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px 15px !important;
+        flex-direction: row !important; /* පේළි දෙකකට කැඩීම වැළැක්වීමට */
+        justify-content: space-between !important;
+    }
+
+    .logo img {
+        height: 35px !important; /* Mobile එකේදී ලෝගෝව කුඩා කිරීම */
+    }
+
+    .logo span {
+        font-size: 18px !important; /* Mobile එකේදී නම කුඩා කිරීම */
+    }
+
+    .admin-name-text {
+        display: none !important; /* ඉඩ ඉතිරි කර ගැනීමට නම සඟවන්න */
+    }
+    
+    .btn-logout-small {
+        padding: 5px 10px !important;
+        font-size: 10px !important;
+    }
 }
