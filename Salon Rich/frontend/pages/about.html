@@ -80,45 +80,32 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="../index.html" class="logo" id="siteLogo">
-                <img src="https://cdn-icons-png.flaticon.com/512/1986/1986347.png" alt="Logo">
-                <span class="logo-text">SALON RICH</span>
-            </a>
+    <nav class="navbar" style="background: #000000 !important; border-bottom: 1px solid var(--accent-gold); position: fixed; width: 100%; top: 0; z-index: 1000;">
+    <div class="container nav-container">
+        <a href="../index.html" class="logo" id="siteLogo" style="text-decoration: none; display: flex; align-items: center; gap: 12px; background: transparent;">
+            <img src="https://cdn-icons-png.flaticon.com/512/1986/1986347.png" alt="Logo" style="height: 45px; background: transparent;">
+            <span class="logo-text" style="color: var(--accent-gold); font-size: 22px; font-weight: 700; letter-spacing: 1px;">SALON RICH</span>
+        </a>
+        
+        <div class="nav-menu" id="navMenu">
+            <ul class="nav-links">
+                <li><a href="../index.html" data-i18n="home">Home</a></li>
+                <li><a href="services.html" data-i18n="services">Services</a></li>
+                <li><a href="gallery.html" data-i18n="gallery_nav">Gallery</a></li>
+                <li><a href="about.html" class="active" data-i18n="about">About Us</a></li>
+                <li><a href="contact.html" data-i18n="contact">Contact</a></li>
+            </ul>
             
-            <div class="nav-menu" id="navMenu">
-                <ul class="nav-links">
-                    <li><a href="../index.html" data-i18n="home">Home</a></li>
-                    <li><a href="services.html" data-i18n="services">Services</a></li>
-                    <li><a href="gallery.html" data-i18n="gallery_nav">Gallery</a></li>
-                    <li><a href="about.html" class="active" data-i18n="about">About Us</a></li>
-                    <li><a href="contact.html" data-i18n="contact">Contact</a></li>
-                </ul>
-                
-                <div class="nav-actions">
-                    <div class="lang-dropdown-container" style="position: relative; border-right: 1px solid rgba(255,255,255,0.2); padding-right: 15px; display: flex; align-items: center;">
-                        <button id="langToggleBtn" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px;">
-                            <i class="fas fa-globe"></i> <span id="currentLangText">EN</span> <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
-                        </button>
-                        <div id="langDropdown" style="display: none; position: absolute; top: 100%; right: 15px; background: var(--secondary-dark); border: 1px solid var(--accent-gold); border-radius: 8px; padding: 10px 0; min-width: 120px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 3000;">
-                            <button class="lang-option" data-lang="en" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">English</button>
-                            <button class="lang-option" data-lang="si" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">සිංහල</button>
-                            <button class="lang-option" data-lang="ta" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">தமிழ்</button>
-                        </div>
-                    </div>
-                    
-                    <a href="login.html" id="navLogin"><i class="fas fa-user-circle" style="font-size: 18px;"></i> <span data-i18n="login">Login</span></a>
-                    
-                    <a href="my_bookings.html" id="navProfile" style="display: none;"><i class="fas fa-user-check" style="font-size: 18px;"></i> <span id="profileNameText">Profile</span></a>
-                </div>
+            <div class="nav-actions">
+                <a href="login.html" id="navLogin"><i class="fas fa-user-circle"></i> <span data-i18n="login">Login</span></a>
             </div>
-
-            <button class="menu-toggle" id="menuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
         </div>
-    </nav>
+
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
 
     <header class="page-header">
         <div class="container">
@@ -137,38 +124,23 @@
                 <p>We use only the finest, carefully selected products to ensure your hair and skin receive the nourishment they deserve. Step into our modern, relaxing environment and let us work our magic.</p>
             </div>
             <div>
-                <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=800&q=80" alt="Salon Interior" class="about-image">
-            </div>
+            <img src="https://shrtlink.ai/myy" alt="Salon Interior" class="about-image">            </div>
         </div>
 
         <div style="text-align: center; margin-top: 80px;">
-            <h2 style="font-size: 32px; color: var(--accent-gold); margin-bottom: 10px; font-family: 'Playfair Display', serif;">Meet Our Experts</h2>
-            <p style="color: var(--text-gray);">The talented artists behind our masterpieces.</p>
-            
-            <div class="team-grid">
-                <div class="team-card">
-                    <img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=400&q=80" alt="Master Stylist" class="team-image">
-                    <div class="team-info">
-                        <h3>Alex Fernando</h3>
-                        <p>Senior Hair Stylist</p>
-                    </div>
-                </div>
-                <div class="team-card">
-                    <img src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?auto=format&fit=crop&w=400&q=80" alt="Color Expert" class="team-image">
-                    <div class="team-info">
-                        <h3>Sarah Perera</h3>
-                        <p>Creative Color Director</p>
-                    </div>
-                </div>
-                <div class="team-card">
-                    <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80" alt="Makeup Artist" class="team-image">
-                    <div class="team-info">
-                        <h3>Natasha Silva</h3>
-                        <p>Lead Makeup Artist</p>
-                    </div>
-                </div>
+    <h2 style="font-size: 32px; color: var(--accent-gold); margin-bottom: 10px; font-family: 'Playfair Display', serif;">Meet Our Founder</h2>
+    <p style="color: var(--text-gray);">The visionary behind Salon Rich.</p>
+    
+    <div style="display: flex; justify-content: center; margin-top: 40px;">
+        <div class="team-card" style="max-width: 350px; width: 100%;">
+            <img src="data:image/jpeg;base64,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" alt="Salon Owner" class="team-image">
+            <div class="team-info">
+                <h3>Sampath Manchanayake</h3> 
+                <p>Founder & Master Stylist</p>
             </div>
         </div>
+    </div>
+</div>
 
     </section>
 

@@ -73,45 +73,43 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="../index.html" class="logo" id="siteLogo">
-                <img src="https://cdn-icons-png.flaticon.com/512/1986/1986347.png" alt="Logo">
-                <span class="logo-text">SALON RICH</span>
-            </a>
+    <nav class="navbar" style="background: #000000 !important; border-bottom: 1px solid var(--accent-gold); position: fixed; width: 100%; top: 0; z-index: 1000; padding: 12px 0;">
+    <div class="container nav-container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        
+        <a href="../index.html" class="logo" id="siteLogo" style="text-decoration: none; display: flex; align-items: center; gap: 12px; background: transparent;">
+            <img id="navMainLogo" src="https://cdn-icons-png.flaticon.com/512/1986/1986347.png" alt="Logo" style="height: 45px; background: transparent; object-fit: contain;">
+            <span class="logo-text" style="color: var(--accent-gold); font-size: 22px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">SALON RICH</span>
+        </a>
+        
+        <div class="nav-menu" id="navMenu" style="display: flex; align-items: center; gap: 30px;">
+            <ul class="nav-links" style="list-style: none; display: flex; gap: 20px; margin: 0; padding: 0;">
+                <li><a href="../index.html" data-i18n="home">Home</a></li>
+                <li><a href="services.html" data-i18n="services">Services</a></li>
+                <li><a href="gallery.html" class="active" data-i18n="gallery_nav">Gallery</a></li>
+                <li><a href="about.html" data-i18n="about">About Us</a></li>
+                <li><a href="contact.html" data-i18n="contact">Contact</a></li>
+            </ul>
             
-            <div class="nav-menu" id="navMenu">
-                <ul class="nav-links">
-                    <li><a href="../index.html" data-i18n="home">Home</a></li>
-                    <li><a href="services.html" data-i18n="services">Services</a></li>
-                    <li><a href="gallery.html" class="active" data-i18n="gallery_nav">Gallery</a></li>
-                    <li><a href="about.html" data-i18n="about">About Us</a></li>
-                    <li><a href="contact.html" data-i18n="contact">Contact</a></li>
-                </ul>
-                
-                <div class="nav-actions">
-                    <div class="lang-dropdown-container" style="position: relative; border-right: 1px solid rgba(255,255,255,0.2); padding-right: 15px; display: flex; align-items: center;">
-                        <button id="langToggleBtn" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px;">
-                            <i class="fas fa-globe"></i> <span id="currentLangText">EN</span> <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
-                        </button>
-                        <div id="langDropdown" style="display: none; position: absolute; top: 100%; right: 15px; background: var(--secondary-dark); border: 1px solid var(--accent-gold); border-radius: 8px; padding: 10px 0; min-width: 120px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 3000;">
-                            <button class="lang-option" data-lang="en" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">English</button>
-                            <button class="lang-option" data-lang="si" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">සිංහල</button>
-                            <button class="lang-option" data-lang="ta" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">தமிழ்</button>
-                        </div>
-                    </div>
-                    
-                    <a href="login.html" id="navLogin"><i class="fas fa-user-circle" style="font-size: 18px;"></i> <span data-i18n="login">Login</span></a>
-                    
-                    <a href="my_bookings.html" id="navProfile" style="display: none;"><i class="fas fa-user-check" style="font-size: 18px;"></i> <span id="profileNameText">Profile</span></a>
+            <div class="nav-actions" style="display: flex; align-items: center; gap: 20px;">
+                <div class="lang-dropdown-container" style="position: relative; border-right: 1px solid rgba(255,255,255,0.2); padding-right: 15px;">
+                    <button id="langToggleBtn" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-globe"></i> <span id="currentLangText">EN</span> <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+                    </button>
                 </div>
+                
+                <a href="login.html" id="navLogin" style="text-decoration: none; color: white; font-size: 14px; font-weight: 600; text-transform: uppercase;"><i class="fas fa-user-circle"></i> <span data-i18n="login">Login</span></a>
+                
+                <button id="navLogout" style="display: none; background: transparent; border: none; color: white; cursor: pointer; font-size: 14px; font-weight: 600; text-transform: uppercase; gap: 8px; align-items: center;"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Logout</span></button>
+                
+                <a href="my_bookings.html" id="navProfile" style="display: none; text-decoration: none; color: var(--accent-gold); font-size: 14px; font-weight: 600; text-transform: uppercase;"><i class="fas fa-user-check"></i> <span id="profileNameText">Profile</span></a>
             </div>
-
-            <button class="menu-toggle" id="menuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
         </div>
-    </nav>
+
+        <button class="menu-toggle" id="menuToggle" style="display: none; background: none; border: none; color: var(--accent-gold); font-size: 24px; cursor: pointer;">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
 
     <header class="page-header">
         <div class="container">

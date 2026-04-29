@@ -71,11 +71,12 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="../index.html" class="logo" id="siteLogo">
-                <img src="https://cdn-icons-png.flaticon.com/512/1986/1986347.png" alt="Logo">
-                <span class="logo-text">SALON RICH</span>
+    <nav class="navbar" style="background: #000000 !important; border-bottom: 1px solid var(--accent-gold); position: fixed; width: 100%; top: 0; z-index: 1000; padding: 12px 0;">
+        <div class="container nav-container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            
+            <a href="../index.html" class="logo" id="siteLogo" style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+                <img id="navMainLogo" src="https://cdn-icons-png.flaticon.com/512/1986/1986347.png" alt="Logo" style="height: 45px; background: transparent; object-fit: contain;">
+                <span class="logo-text" style="color: var(--accent-gold); font-size: 22px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">SALON RICH</span>
             </a>
             
             <div class="nav-menu" id="navMenu">
@@ -88,30 +89,16 @@
                 </ul>
                 
                 <div class="nav-actions">
-                    <div class="lang-dropdown-container" style="position: relative; border-right: 1px solid rgba(255,255,255,0.2); padding-right: 15px; display: flex; align-items: center;">
-                        <button id="langToggleBtn" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px;">
-                            <i class="fas fa-globe"></i> <span id="currentLangText">EN</span> <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
-                        </button>
-                        <div id="langDropdown" style="display: none; position: absolute; top: 100%; right: 15px; background: var(--secondary-dark); border: 1px solid var(--accent-gold); border-radius: 8px; padding: 10px 0; min-width: 120px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 3000;">
-                            <button class="lang-option" data-lang="en" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">English</button>
-                            <button class="lang-option" data-lang="si" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">සිංහල</button>
-                            <button class="lang-option" data-lang="ta" style="display: block; width: 100%; padding: 8px 15px; background: none; border: none; color: white; text-align: left; cursor: pointer; transition: 0.3s;">தமிழ்</button>
-                        </div>
-                    </div>
-                    
-                    <a href="login.html" id="navLogin"><i class="fas fa-user-circle" style="font-size: 18px;"></i> <span data-i18n="login">Login</span></a>
-                    
-                    <a href="my_bookings.html" id="navProfile" style="display: none;"><i class="fas fa-user-check" style="font-size: 18px;"></i> <span id="profileNameText">Profile</span></a>
+                    <a href="login.html" id="navLogin"><i class="fas fa-user-circle"></i> <span data-i18n="login">Login</span></a>
+                    <a href="my_bookings.html" id="navProfile" style="display: none;"><i class="fas fa-user-check"></i> <span id="profileNameText">Profile</span></a>
                 </div>
             </div>
 
-            <button class="menu-toggle" id="menuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
+            <button class="menu-toggle" id="menuToggle" style="background: none; border: none; color: var(--accent-gold); font-size: 24px; cursor: pointer;"><i class="fas fa-bars"></i></button>
         </div>
     </nav>
 
-    <header class="page-header">
+    <header class="page-header" id="servicesHeader">
         <div class="container">
             <h1 style="font-size: clamp(2.5rem, 6vw, 3.5rem); margin-bottom: 15px; color: var(--accent-gold); font-family: 'Playfair Display', serif;">Our Premium Services</h1>
             <p style="font-size: 1.2rem; color: #ddd; max-width: 600px; margin: 0 auto;">Discover the perfect treatment tailored just for your style and well-being.</p>
@@ -203,14 +190,35 @@
 
 
     <script type="module">
-        import { auth } from '../js/firebase-config.js';
-        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { auth, db } from '../js/firebase-config.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const navLogin = document.getElementById('navLogin');
-        const navProfile = document.getElementById('navProfile');
-        const profileNameText = document.getElementById('profileNameText');
+        // 🌟 1. Firebase එකෙන් ලෝගෝ එක සහ බැනර් එක ගෙන ඒම
+        async function syncMedia() {
+            try {
+                // Home Settings වලින් Logo එක ගැනීම
+                const homeSnap = await getDoc(doc(db, "site_settings", "home_page"));
+                if (homeSnap.exists() && homeSnap.data().logoUrl) {
+                    document.getElementById('navMainLogo').src = homeSnap.data().logoUrl;
+                }
 
+                // Other Pages Settings වලින් Services Banner එක ගැනීම
+                const otherSnap = await getDoc(doc(db, "site_settings", "other_pages"));
+                if (otherSnap.exists() && otherSnap.data().servicesImg) {
+                    document.getElementById('servicesHeader').style.background = 
+                        `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${otherSnap.data().servicesImg}') center/cover`;
+                }
+            } catch (error) { console.error("Media Load Error:", error); }
+        }
+        syncMedia();
+
+        // 🌟 2. Auth Status Check
         onAuthStateChanged(auth, (user) => {
+            const navLogin = document.getElementById('navLogin');
+            const navProfile = document.getElementById('navProfile');
+            const profileNameText = document.getElementById('profileNameText');
+
             if (user) {
                 if(navLogin) navLogin.style.display = 'none';
                 if(navProfile) {

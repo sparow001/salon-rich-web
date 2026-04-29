@@ -302,48 +302,52 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="index.html" class="logo" id="siteLogo">✨ SALON RICH</a>
+    <nav class="navbar" style="background: #000000 !important; border-bottom: 1px solid var(--accent-gold); position: fixed; width: 100%; top: 0; z-index: 1000;">
+    <div class="container nav-container">
+        
+        <a href="index.html" class="logo" id="siteLogo" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
+            <img id="navMainLogo" src="https://cdn-icons-png.flaticon.com/512/1986/1986347.png" alt="Logo" style="height: 45px; background: transparent; object-fit: contain;">
+            <span class="logo-text">SALON RICH</span>
+        </a>
+        
+        <div class="nav-menu" id="navMenu">
+            <ul class="nav-links">
+                <li><a href="index.html" class="active" data-i18n="home">Home</a></li>
+                <li><a href="pages/services.html" data-i18n="services">Services</a></li>
+                <li><a href="pages/gallery.html" data-i18n="gallery_nav">Gallery</a></li>
+                <li><a href="pages/about.html" data-i18n="about">About Us</a></li>
+                <li><a href="pages/contact.html" data-i18n="contact">Contact</a></li>
+            </ul>
             
-            <div class="nav-menu" id="navMenu">
-                <ul class="nav-links">
-                    <li><a href="index.html" class="active" data-i18n="home">Home</a></li>
-                    <li><a href="pages/services.html" data-i18n="services">Services</a></li>
-                    <li><a href="pages/gallery.html" data-i18n="gallery_nav">Gallery</a></li>
-                    <li><a href="pages/about.html" data-i18n="about">About Us</a></li>
-                    <li><a href="pages/contact.html" data-i18n="contact">Contact</a></li>
-                    
-                    
-                </ul>
-                
-                <div class="nav-actions premium-nav-actions">
-                    <div class="lang-dropdown-wrapper">
-                        <button class="lang-trigger-btn" id="langDropdownBtn">
-                            <i class="fas fa-globe"></i> <span id="currentLangDisplay">EN</span> <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
-                        </button>
-                        <div class="lang-dropdown-content" id="langDropdownContent">
-                            <button class="lang-option active" data-lang="en">English (EN)</button>
-                            <button class="lang-option" data-lang="si">සිංහල (SI)</button>
-                            <button class="lang-option" data-lang="ta">தமிழ் (TA)</button>
-                        </div>
+            <div class="nav-actions premium-nav-actions">
+                <div class="lang-dropdown-wrapper">
+                    <button class="lang-trigger-btn" id="langDropdownBtn">
+                        <i class="fas fa-globe"></i> <span id="currentLangDisplay">EN</span> <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+                    </button>
+                    <div class="lang-dropdown-content" id="langDropdownContent">
+                        <button class="lang-option active" data-lang="en">English (EN)</button>
+                        <button class="lang-option" data-lang="si">සිංහල (SI)</button>
+                        <button class="lang-option" data-lang="ta">தமிழ் (TA)</button>
                     </div>
-                    
-                    <button class="btn-premium-solid btn-book-global" data-i18n="bookNowBtn">Book Now</button>
-                    
-                    <a href="pages/login.html" id="navLogin" class="btn-premium-outline"><i class="fas fa-user-circle"></i> <span data-i18n="login">Login</span></a>
-                    
-                    <a href="pages/my_bookings.html" id="navProfilePremium" class="btn-premium-outline" style="display: none; border-color: var(--accent-gold); color: var(--accent-gold) !important;">
-                        <i class="fas fa-user-circle"></i> <span id="profileNameTextPremium" style="margin-left: 5px;">Profile</span>
-                    </a>
                 </div>
+                
+                <button class="btn-premium-solid btn-book-global" data-i18n="bookNowBtn">Book Now</button>
+                
+                <a href="pages/login.html" id="navLogin" class="btn-premium-outline">
+                    <i class="fas fa-user-circle"></i> <span data-i18n="login">Login</span>
+                </a>
+                
+                <a href="pages/my_bookings.html" id="navProfilePremium" class="btn-premium-outline" style="display: none;">
+                    <i class="fas fa-user-circle"></i> <span id="profileNameTextPremium" style="margin-left: 5px;">Profile</span>
+                </a>
             </div>
-
-            <button class="menu-toggle" id="menuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
         </div>
-    </nav>
+
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
 
     <header class="hero">
         <div class="hero-slider" id="heroSliderContainer">
@@ -460,7 +464,7 @@
             </div>
         </div>
         <div class="container text-center footer-bottom">
-            &copy; 2026 Salon Rich. All rights reserved. | Developed by Ceylon Corner Tech Solutions
+            &copy; 2026 Salon Rich. All rights reserved. | Developed by Ceylon Corner Test Solutions
         </div>
     </footer>
 
